@@ -26,12 +26,12 @@ public abstract class Slime extends Circle implements Runnable{
 //    private int dy; // change in vertical position of ball
     protected ImageView imageView;
     public Slime(final int xPosition, final int yPosition) {
-        super(10,Color.TRANSPARENT);
+        super(30,Color.TRANSPARENT);
 //        this.setFill(Color.TRANSPARENT);
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
-        xVelocity = GENERATOR.nextInt(5); // change in x (0 - 4 pixels)
-        yVelocity = GENERATOR.nextInt(5); // change in y (0 - 4 pixels)
+        xVelocity = GENERATOR.nextInt(1,6); // change in x (0 - 4 pixels)
+        yVelocity = GENERATOR.nextInt(1,6); // change in y (0 - 4 pixels)
     }
     public int getSize() {
         return this.size;
