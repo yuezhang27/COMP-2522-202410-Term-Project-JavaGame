@@ -3,6 +3,7 @@ package ca.bcit.comp2522.termproject.javagame;
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ public abstract class Slime extends Circle implements Runnable{
 //    private int dy; // change in vertical position of ball
     protected ImageView imageView;
     public Slime(final int xPosition, final int yPosition) {
-        super(10);
+        super(10,Color.TRANSPARENT);
+//        this.setFill(Color.TRANSPARENT);
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
         xVelocity = GENERATOR.nextInt(5); // change in x (0 - 4 pixels)
@@ -97,27 +99,47 @@ public abstract class Slime extends Circle implements Runnable{
     /**
      * Bounces the Ball perpetually.
      */
+//    public void run() {
+//        while (true) {
+//            try {
+//                Thread.sleep(20); // sleep for 20 milliseconds
+//            } catch (InterruptedException exception) {
+//                exception.printStackTrace();
+//            }
+//
+//            /*
+//               Long-running operations must not be run on the JavaFX application
+//               thread, since this prevents JavaFX from updating the UI, resulting
+//               in a frozen UI.
+//
+//               Note however that any change to a Node that is part of a "live" scene
+//               graph must happen on the JavaFX application thread.
+//
+//               Platform.runLater can be used to execute those updates on the
+//               JavaFX application thread.
+//             */
+//            Platform.runLater(() -> {
+//                // if bounce off top or bottom of Panel
+//                if (this.getCenterY() <= 0 || this.getCenterY() >= MAX_Y) {
+//                    yVelocity *= -1; // reverses velocity in y direction
+//                }
+//                // if bounce off left or right of Panel
+//                if (this.getCenterX() <= 0 || this.getCenterX() >= MAX_X) {
+//                    xVelocity *= -1; // reverses velocity in x direction
+//                }
+//                this.setCenterX(this.getCenterX() + xVelocity); // determines new x-position
+//                this.setCenterY(this.getCenterY() + yVelocity); // determines new y-position
+//            });
+//        }
+//    }
     public void run() {
         while (true) {
             try {
-                Thread.sleep(20); // sleep for 20 milliseconds
+                Thread.sleep(20);
             } catch (InterruptedException exception) {
                 exception.printStackTrace();
             }
-
-            /*
-               Long-running operations must not be run on the JavaFX application
-               thread, since this prevents JavaFX from updating the UI, resulting
-               in a frozen UI.
-
-               Note however that any change to a Node that is part of a "live" scene
-               graph must happen on the JavaFX application thread.
-
-               Platform.runLater can be used to execute those updates on the
-               JavaFX application thread.
-             */
             Platform.runLater(() -> {
-                // if bounce off top or bottom of Panel
                 if (this.getCenterY() <= 0 || this.getCenterY() >= MAX_Y) {
                     yVelocity *= -1; // reverses velocity in y direction
                 }
@@ -125,11 +147,18 @@ public abstract class Slime extends Circle implements Runnable{
                 if (this.getCenterX() <= 0 || this.getCenterX() >= MAX_X) {
                     xVelocity *= -1; // reverses velocity in x direction
                 }
+                // Update the position of the ball
                 this.setCenterX(this.getCenterX() + xVelocity); // determines new x-position
                 this.setCenterY(this.getCenterY() + yVelocity); // determines new y-position
+
+                if (imageView != null) {
+                    imageView.setX(this.getCenterX() - this.getRadius());
+                    imageView.setY(this.getCenterY() - this.getRadius());
+                }
             });
         }
     }
+
 
     public void addToPane(Pane pane) {
         pane.getChildren().add(this);
