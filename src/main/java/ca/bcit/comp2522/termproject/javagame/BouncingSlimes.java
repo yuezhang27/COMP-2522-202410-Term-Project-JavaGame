@@ -25,6 +25,7 @@ public class BouncingSlimes extends Application {
         Pane canvas = new Pane();
         Scene scene = new Scene(canvas, 500, 500);
         Slime ball = new YellowSlime(250, 250);
+        Slime slime2 = new BlueSlime(150, 150);
 
         canvas.getChildren().add(ball);
 
@@ -37,14 +38,20 @@ public class BouncingSlimes extends Application {
         bouncer.start();
 
         Random random = new Random();
-        for (int i = 0; i < 50; ++i) {
+        for (int i = 0; i < 10; ++i) {
             Slime anotherBall = new YellowSlime(random.nextInt(250), random.nextInt(250));
+            Slime anotherBlue = new BlueSlime(random.nextInt(150),random.nextInt(150));
 //            canvas.getChildren().add(anotherBall);
             anotherBall.addToPane(canvas);
+            anotherBlue.addToPane(canvas);
             Thread bouncingBall = new Thread(anotherBall);
+            Thread bouncingBlue = new Thread(anotherBlue);
             bouncingBall.setDaemon(true);
+            bouncingBlue.setDaemon(true);
             bouncingBall.start();
+            bouncingBlue.start();
         }
+
     }
 
     /**
