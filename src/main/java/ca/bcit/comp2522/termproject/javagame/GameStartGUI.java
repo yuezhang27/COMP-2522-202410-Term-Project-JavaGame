@@ -3,6 +3,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
@@ -15,12 +16,16 @@ public class GameStartGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        Image backgroundImg = new Image("slimeBackground.png");
+        ImageView imageView = new ImageView(backgroundImg);
+
         // 创建一个Button
         Button startGameButton = new Button("START GAME!");
         Circle circle = new Circle(50);
         startGameButton.setShape(circle);
         startGameButton.setMinSize(100, 100);
         startGameButton.setMaxSize(100, 100);
+        startGameButton.setTranslateY(100);
         startGameButton.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
 
         // add event listener to the button
@@ -31,6 +36,7 @@ public class GameStartGUI extends Application {
 
         //创建一个StackPane，把Button添加到布局中
         StackPane root = new StackPane();
+        root.getChildren().add(imageView);
         root.getChildren().add(startGameButton);
 
         // 创建scene，设置scene大小，把StackPane设置到场景中
