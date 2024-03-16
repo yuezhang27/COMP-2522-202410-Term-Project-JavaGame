@@ -1,5 +1,7 @@
 package ca.bcit.comp2522.termproject.javagame;
 
+import java.util.ArrayList;
+
 public abstract class Slime {
     private int size;
     private double xCoordinator;
@@ -66,4 +68,11 @@ public abstract class Slime {
 
     protected abstract SlimeType setConstantSlimeType(SlimeType slimeType);
     protected abstract String setConstantSlimeImage(String imgName);
+    protected abstract void moveSlime(Slime slime);
+
+    protected abstract ArrayList<Slime> splitSlime(Slime slime);
+    protected abstract boolean checkIsCollide();
+    protected abstract Slime slimeMutation();
+
+
 }
