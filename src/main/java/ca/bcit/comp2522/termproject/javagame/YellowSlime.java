@@ -1,11 +1,14 @@
 package ca.bcit.comp2522.termproject.javagame;
 
+import java.util.ArrayList;
+
 public class YellowSlime extends Slime{
     public static final SlimeType SLIME_TYPE = SlimeType.YELLOW_SLIME;
+    public static final String SLIME_IMAGE = "yellowSlime.png";
     public static final int INITIAL_SIZE = 50;
 
     public YellowSlime(){
-        this.size = INITIAL_SIZE;
+        super();
     }
     @Override
     protected SlimeType setConstantSlimeType(SlimeType slimeType) {
@@ -13,17 +16,29 @@ public class YellowSlime extends Slime{
     }
 
     @Override
-    protected int setConstantSize(int size) {
-        return 0;
+    protected String setConstantSlimeImage(String imgName) {
+        return SLIME_IMAGE;
     }
 
     @Override
-    protected int setConstantPrice(int size) {
-        return 0;
+    protected void moveSlime(Slime slime) {
+
     }
 
     @Override
-    protected void setSize(int newSize) {
-        this.size = newSize;
+    protected ArrayList<Slime> splitSlime(Slime slime) {
+        return null;
     }
+
+    @Override
+    protected boolean checkIsCollide() {
+        return false;
+    }
+
+    @Override
+    protected Slime slimeMutation() {
+        return null;
+    }
+
+
 }
