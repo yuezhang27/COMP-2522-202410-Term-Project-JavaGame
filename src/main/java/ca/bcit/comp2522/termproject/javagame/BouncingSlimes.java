@@ -39,8 +39,8 @@ public class BouncingSlimes extends Application {
 
         Random random = new Random();
         for (int i = 0; i < 10; ++i) {
-            Slime anotherBall = new YellowSlime(random.nextInt(250), random.nextInt(250));
-            Slime anotherBlue = new BlueSlime(random.nextInt(150),random.nextInt(150));
+            Slime anotherBall = new YellowSlime(random.nextInt(500), random.nextInt(500));
+            Slime anotherBlue = new BlueSlime(random.nextInt(500),random.nextInt(500));
 //            canvas.getChildren().add(anotherBall);
             anotherBall.addToPane(canvas);
             anotherBlue.addToPane(canvas);
