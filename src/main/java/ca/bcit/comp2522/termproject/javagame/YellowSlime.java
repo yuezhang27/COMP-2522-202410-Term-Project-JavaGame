@@ -10,7 +10,7 @@ public class YellowSlime extends Slime{
     public static final String SLIME_IMAGE = "yellowSlime.png";
     public static final int INITIAL_SIZE = 50;
 
-    public YellowSlime(int xPosition, int yPosition){
+    public YellowSlime(double xPosition, double yPosition){
         super(xPosition, yPosition);
         // 设置黄色粘液的图片
         Image image = new Image("yellowSlime.png"); // 替换为实际图片路径
