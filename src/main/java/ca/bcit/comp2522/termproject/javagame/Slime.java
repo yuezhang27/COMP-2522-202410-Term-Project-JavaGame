@@ -26,7 +26,7 @@ public abstract class Slime extends Circle implements Runnable{
 //    private int dy; // change in vertical position of ball
     protected ImageView imageView;
     public Slime(final int xPosition, final int yPosition) {
-        super(30,Color.TRANSPARENT);
+        super(10,Color.TRANSPARENT);
 //        this.setFill(Color.TRANSPARENT);
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
@@ -140,12 +140,16 @@ public abstract class Slime extends Circle implements Runnable{
                 exception.printStackTrace();
             }
             Platform.runLater(() -> {
-                if (this.getCenterY() <= 0 || this.getCenterY() >= MAX_Y) {
-                    yVelocity *= -1; // reverses velocity in y direction
+                if (this.getCenterY() <= 0 && this.getYVelocity() < 0) {
+                    yVelocity = GENERATOR.nextInt(1, 6);
+                } else if (this.getCenterY() >= MAX_Y && this.getYVelocity() > 0) {
+                    yVelocity = GENERATOR.nextInt(1, 6) * -1;
                 }
                 // if bounce off left or right of Panel
-                if (this.getCenterX() <= 0 || this.getCenterX() >= MAX_X) {
-                    xVelocity *= -1; // reverses velocity in x direction
+                if (this.getCenterX() <= 0 && this.getXVelocity() < 0) {
+                    xVelocity = GENERATOR.nextInt(1, 6);
+                } else if (this.getCenterX() >= MAX_Y && this.getXVelocity() > 0) {
+                    xVelocity = GENERATOR.nextInt(1, 6) * -1;
                 }
                 // Update the position of the ball
                 this.setCenterX(this.getCenterX() + xVelocity); // determines new x-position
