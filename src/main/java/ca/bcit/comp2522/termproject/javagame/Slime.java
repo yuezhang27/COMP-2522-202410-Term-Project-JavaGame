@@ -3,6 +3,7 @@ package ca.bcit.comp2522.termproject.javagame;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -13,7 +14,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Slime extends Circle implements Runnable {
-    public final double MUTATION_COEFFICIENT = 0.5;
+    public static final double MUTATION_COEFFICIENT = 0.5;
+    public static final int INITIAL_IMAGE_SIZE = 10;
     private int size;
     private double xCoordinator;
     private double yCoordinator;
@@ -21,6 +23,10 @@ public abstract class Slime extends Circle implements Runnable {
     private double yVelocity;
     private int price;
     private boolean isAlive;
+    private Thread thread;
+    private final PetriDish petriDish;
+    private volatile boolean running = true;
+
     private static final Random GENERATOR = new Random();
 
     private static final int MAX_X = 500; // horizontal edge of enclosing Panel
@@ -30,14 +36,14 @@ public abstract class Slime extends Circle implements Runnable {
 //    private int dy; // change in vertical position of ball
     protected ImageView imageView;
 
-    public Slime(final double xPosition, final double yPosition) {
-        super(10, Color.TRANSPARENT);
+    public Slime(final double xPosition, final double yPosition, PetriDish petriDish) {
+        super(INITIAL_IMAGE_SIZE, Color.TRANSPARENT);
 //        this.setFill(Color.TRANSPARENT);
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
+        this.petriDish = petriDish;
         xVelocity = GENERATOR.nextInt(1, 6); // change in x (0 - 4 pixels)
         yVelocity = GENERATOR.nextInt(1, 6); // change in y (0 - 4 pixels)
-
     }
 
     public int getSize() {
@@ -87,6 +93,7 @@ public abstract class Slime extends Circle implements Runnable {
     public boolean getIsAlive() {
         return this.isAlive;
     }
+
 
     public void setAlive(boolean newIsAlive) {
         if (this.isAlive) {
@@ -144,7 +151,7 @@ public abstract class Slime extends Circle implements Runnable {
 //        }
 //    }
     public void run() {
-        while (true) {
+        while (running) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException exception) {
@@ -154,17 +161,33 @@ public abstract class Slime extends Circle implements Runnable {
                 if (this.getCenterY() <= 0 && this.getYVelocity() < 0) {
                     yVelocity = GENERATOR.nextInt(1, 6);
                     animateRotation(imageView, GENERATOR.nextInt(180));
+                    this.grow(1);
+                    if (this.size >= 10) {
+                        this.split(this.petriDish);
+                    }
                 } else if (this.getCenterY() >= MAX_Y && this.getYVelocity() > 0) {
                     yVelocity = GENERATOR.nextInt(1, 6) * -1;
                     animateRotation(imageView, GENERATOR.nextInt(180));
+                    this.grow(1);
+                    if (this.size >= 10) {
+                        this.split(this.petriDish);
+                    }
                 }
                 // if bounce off left or right of Panel
                 if (this.getCenterX() <= 0 && this.getXVelocity() < 0) {
                     xVelocity = GENERATOR.nextInt(1, 6);
                     animateRotation(imageView, GENERATOR.nextInt(180));
+                    this.grow(1);
+                    if (this.size >= 10) {
+                        this.split(this.petriDish);
+                    }
                 } else if (this.getCenterX() >= MAX_Y && this.getXVelocity() > 0) {
                     xVelocity = GENERATOR.nextInt(1, 6) * -1;
                     animateRotation(imageView, GENERATOR.nextInt(180));
+                    this.grow(1);
+                    if (this.size >= 10) {
+                        this.split(this.petriDish);
+                    }
                 }
                 // Update the position of the ball
                 this.setCenterX(this.getCenterX() + xVelocity); // determines new x-position
@@ -176,6 +199,15 @@ public abstract class Slime extends Circle implements Runnable {
                 }
             });
         }
+    }
+
+    public void startThread(Slime slime, PetriDish petriDish){
+//        slime.addToPane(petriDish.getCanvas());
+        Thread bouncer = new Thread(this);
+        bouncer.setDaemon(true);
+        petriDish.addThread(bouncer);
+        bouncer.start();
+        this.thread = bouncer;
     }
 
     private void animateRotation(ImageView imageView, double angle) {
@@ -196,35 +228,52 @@ public abstract class Slime extends Circle implements Runnable {
     public Slime mutation() {
         double slimeCoefficient = GENERATOR.nextDouble();
         if (slimeCoefficient <= 0.1) {
-            return new PurpleSlime(this.getXCoordinator(), this.getYCoordinator());
+            return new PurpleSlime(this.getXCoordinator(), this.getYCoordinator(), this.petriDish);
         } else if (slimeCoefficient <= 0.3) {
-            return new PinkSlime(this.getXCoordinator(), this.getYCoordinator());
+            return new PinkSlime(this.getXCoordinator(), this.getYCoordinator(), this.petriDish);
         } else if (slimeCoefficient <= 0.6) {
-            return new BlueSlime(this.getXCoordinator(), this.getYCoordinator());
+            return new BlueSlime(this.getXCoordinator(), this.getYCoordinator(), this.petriDish);
         } else {
-            return new GreenSlime(this.getXCoordinator(), this.getYCoordinator());
+            return new GreenSlime(this.getXCoordinator(), this.getYCoordinator(), this.petriDish);
         }
     }
 
-    public ArrayList<Slime> split() {
-        ArrayList<Slime> slimeBabies = new ArrayList<>();
+    public void split(PetriDish petriDish) {
+        petriDish.removeSlime(this);
+        petriDish.removeThread(this.thread);
+        this.stopThread();
         for (int i = 1; i <= 2; i++) {
             Slime slimeBaby;
             if (GENERATOR.nextDouble() > MUTATION_COEFFICIENT) {
                 slimeBaby = mutation();
             } else {
-                slimeBaby = new YellowSlime(this.getXCoordinator(), this.getYCoordinator());
+                slimeBaby = new YellowSlime(this.getXCoordinator(), this.getYCoordinator(), this.petriDish);
             }
-            slimeBabies.add(slimeBaby);
+            petriDish.addSlime(slimeBaby);
+            petriDish.addThread(this.thread);
+            slimeBaby.startThread(this, petriDish);
         }
-        return slimeBabies;
     }
 
-    public void checkIfSplit() {
-        if (this.size >= 10) {
-            this.split();
-        }
 
+
+    public void grow(int growCoefficient) {
+        this.size += growCoefficient;
+        System.out.println(this.size);
+        this.imageView.setFitWidth(imageView.getFitWidth() + 2 * growCoefficient);
+        this.imageView.setFitHeight(imageView.getFitHeight() + 2 * growCoefficient);
+
+    }
+
+    public void removeSlime(PetriDish petriDish){
+        petriDish.removeSlime(this);
+    }
+
+    public void die(){
+        this.setAlive(false);
+    }
+    public void stopThread() {
+        running = false;
     }
 
 
