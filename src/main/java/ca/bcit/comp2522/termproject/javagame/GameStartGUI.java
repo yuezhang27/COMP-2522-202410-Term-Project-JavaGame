@@ -11,6 +11,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 
 public class GameStartGUI extends Application {
 
@@ -28,11 +29,19 @@ public class GameStartGUI extends Application {
         startGameButton.setTranslateY(100);
         startGameButton.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
 
-        // add event listener to the button
+        //connect the 2 stage
         startGameButton.setOnAction(event -> {
-            // Caroline: WRITE GAME START AND INITIALIZE CODE HERE!!!!!!
             System.out.println("Game Start!");
+            primaryStage.close();
+            Platform.runLater(() -> {
+                try {
+                    new BouncingSlimes().start(new Stage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         });
+
 
         //创建一个StackPane，把Button添加到布局中
         StackPane root = new StackPane();
