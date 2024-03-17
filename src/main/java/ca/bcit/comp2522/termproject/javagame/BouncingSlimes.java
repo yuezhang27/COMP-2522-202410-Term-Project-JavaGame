@@ -29,17 +29,14 @@ public class BouncingSlimes extends Application {
         Pane canvas = petriDish.getCanvas();
         Scene scene = new Scene(canvas, 500, 500);
 
-        Slime defaultSlime = new YellowSlime(250, 250);
+        Slime defaultSlime = new YellowSlime(250, 250, petriDish);
         defaultSlime.addToPane(canvas);
+        defaultSlime.startThread(defaultSlime, petriDish);
 
         primaryStage.setTitle("Threads and Balls");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        Thread bouncer = new Thread(defaultSlime);
-        bouncer.setDaemon(true);
-        petriDish.addThread(bouncer);
-        bouncer.start();
 
 //        Random random = new Random();
 //        for (int i = 0; i < 10; ++i) {
