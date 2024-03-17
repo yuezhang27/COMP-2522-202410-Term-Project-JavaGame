@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Slime extends Circle implements Runnable {
+    public final double MUTATION_COEFFICIENT = 0.5;
     private int size;
     private double xCoordinator;
     private double yCoordinator;
@@ -192,20 +193,37 @@ public abstract class Slime extends Circle implements Runnable {
         }
     }
 
-    public Slime mutation(Slime parentSlime) {
+    public Slime mutation() {
         double slimeCoefficient = GENERATOR.nextDouble();
         if (slimeCoefficient <= 0.1) {
-            return new PurpleSlime(parentSlime.getXCoordinator(), parentSlime.getYCoordinator());
+            return new PurpleSlime(this.getXCoordinator(), this.getYCoordinator());
         } else if (slimeCoefficient <= 0.3) {
-            return new PinkSlime(parentSlime.getXCoordinator(), parentSlime.getYCoordinator());
+            return new PinkSlime(this.getXCoordinator(), this.getYCoordinator());
         } else if (slimeCoefficient <= 0.6) {
-            return new BlueSlime(parentSlime.getXCoordinator(), parentSlime.getYCoordinator());
+            return new BlueSlime(this.getXCoordinator(), this.getYCoordinator());
         } else {
-            return new GreenSlime(parentSlime.getXCoordinator(), parentSlime.getYCoordinator());
+            return new GreenSlime(this.getXCoordinator(), this.getYCoordinator());
         }
     }
 
-    public split() {
+    public ArrayList<Slime> split() {
+        ArrayList<Slime> slimeBabies = new ArrayList<>();
+        for (int i = 1; i <= 2; i++) {
+            Slime slimeBaby;
+            if (GENERATOR.nextDouble() > MUTATION_COEFFICIENT) {
+                slimeBaby = mutation();
+            } else {
+                slimeBaby = new YellowSlime(this.getXCoordinator(), this.getYCoordinator());
+            }
+            slimeBabies.add(slimeBaby);
+        }
+        return slimeBabies;
+    }
+
+    public void checkIfSplit() {
+        if (this.size >= 10) {
+            this.split();
+        }
 
     }
 
