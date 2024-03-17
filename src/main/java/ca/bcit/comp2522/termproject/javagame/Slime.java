@@ -12,7 +12,7 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Slime extends Circle implements Runnable{
+public abstract class Slime extends Circle implements Runnable {
     private int size;
     private double xCoordinator;
     private double yCoordinator;
@@ -25,17 +25,20 @@ public abstract class Slime extends Circle implements Runnable{
     private static final int MAX_X = 500; // horizontal edge of enclosing Panel
     private static final int MAX_Y = 500; // vertical edge of enclosing Panel
 
-//    private int dx; // change in horizontal position of ball
+    //    private int dx; // change in horizontal position of ball
 //    private int dy; // change in vertical position of ball
     protected ImageView imageView;
-    public Slime(final int xPosition, final int yPosition) {
-        super(10,Color.TRANSPARENT);
+
+    public Slime(final double xPosition, final double yPosition) {
+        super(10, Color.TRANSPARENT);
 //        this.setFill(Color.TRANSPARENT);
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
-        xVelocity = GENERATOR.nextInt(1,6); // change in x (0 - 4 pixels)
-        yVelocity = GENERATOR.nextInt(1,6); // change in y (0 - 4 pixels)
+        xVelocity = GENERATOR.nextInt(1, 6); // change in x (0 - 4 pixels)
+        yVelocity = GENERATOR.nextInt(1, 6); // change in y (0 - 4 pixels)
+
     }
+
     public int getSize() {
         return this.size;
     }
@@ -91,14 +94,18 @@ public abstract class Slime extends Circle implements Runnable{
     }
 
 
-
     protected abstract SlimeType setConstantSlimeType(SlimeType slimeType);
+
     protected abstract String setConstantSlimeImage(String imgName);
+
     protected abstract void moveSlime(Slime slime);
 
     protected abstract ArrayList<Slime> splitSlime(Slime slime);
+
     protected abstract boolean checkIsCollide();
+
     protected abstract Slime slimeMutation();
+
     /**
      * Bounces the Ball perpetually.
      */
@@ -169,6 +176,7 @@ public abstract class Slime extends Circle implements Runnable{
             });
         }
     }
+
     private void animateRotation(ImageView imageView, double angle) {
         RotateTransition rotateTransition = new RotateTransition(Duration.millis(200), imageView);
         rotateTransition.setToAngle(angle);
@@ -182,6 +190,23 @@ public abstract class Slime extends Circle implements Runnable{
         if (imageView != null) {
             pane.getChildren().add(imageView);
         }
+    }
+
+    public Slime mutation(Slime parentSlime) {
+        double slimeCoefficient = GENERATOR.nextDouble();
+        if (slimeCoefficient <= 0.1) {
+            return new PurpleSlime(parentSlime.getXCoordinator(), parentSlime.getYCoordinator());
+        } else if (slimeCoefficient <= 0.3) {
+            return new PinkSlime(parentSlime.getXCoordinator(), parentSlime.getYCoordinator());
+        } else if (slimeCoefficient <= 0.6) {
+            return new BlueSlime(parentSlime.getXCoordinator(), parentSlime.getYCoordinator());
+        } else {
+            return new GreenSlime(parentSlime.getXCoordinator(), parentSlime.getYCoordinator());
+        }
+    }
+
+    public split() {
+
     }
 
 
