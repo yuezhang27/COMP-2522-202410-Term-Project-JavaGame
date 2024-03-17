@@ -1,10 +1,13 @@
 package ca.bcit.comp2522.termproject.javagame;
 
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -142,14 +145,18 @@ public abstract class Slime extends Circle implements Runnable{
             Platform.runLater(() -> {
                 if (this.getCenterY() <= 0 && this.getYVelocity() < 0) {
                     yVelocity = GENERATOR.nextInt(1, 6);
+                    animateRotation(imageView, GENERATOR.nextInt(180));
                 } else if (this.getCenterY() >= MAX_Y && this.getYVelocity() > 0) {
                     yVelocity = GENERATOR.nextInt(1, 6) * -1;
+                    animateRotation(imageView, GENERATOR.nextInt(180));
                 }
                 // if bounce off left or right of Panel
                 if (this.getCenterX() <= 0 && this.getXVelocity() < 0) {
                     xVelocity = GENERATOR.nextInt(1, 6);
+                    animateRotation(imageView, GENERATOR.nextInt(180));
                 } else if (this.getCenterX() >= MAX_Y && this.getXVelocity() > 0) {
                     xVelocity = GENERATOR.nextInt(1, 6) * -1;
+                    animateRotation(imageView, GENERATOR.nextInt(180));
                 }
                 // Update the position of the ball
                 this.setCenterX(this.getCenterX() + xVelocity); // determines new x-position
@@ -161,6 +168,12 @@ public abstract class Slime extends Circle implements Runnable{
                 }
             });
         }
+    }
+    private void animateRotation(ImageView imageView, double angle) {
+        RotateTransition rotateTransition = new RotateTransition(Duration.millis(200), imageView);
+        rotateTransition.setToAngle(angle);
+        rotateTransition.setCycleCount(1);
+        rotateTransition.play();
     }
 
 
