@@ -3,8 +3,8 @@ package ca.bcit.comp2522.termproject.javagame;
 import java.util.ArrayList;
 
 public class PinkSlime extends Slime{
-    public PinkSlime(double xPosition, double yPosition) {
-        super(xPosition, yPosition);
+    public PinkSlime(double xPosition, double yPosition, PetriDish petriDish) {
+        super(xPosition, yPosition, petriDish);
     }
 
     @Override

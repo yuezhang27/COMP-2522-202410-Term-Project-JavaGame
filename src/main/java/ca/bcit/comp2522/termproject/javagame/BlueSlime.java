@@ -10,8 +10,8 @@ public class BlueSlime extends Slime{
     public static final String SLIME_IMAGE = "blueSlime.png";
     public static final int INITIAL_SIZE = 50;
 
-    public BlueSlime(double xPosition, double yPosition){
-        super(xPosition, yPosition);
+    public BlueSlime(double xPosition, double yPosition, PetriDish petriDish){
+        super(xPosition, yPosition, petriDish);
         // 设置黄色粘液的图片
         Image image = new Image(SLIME_IMAGE); // 替换为实际图片路径
         imageView = new ImageView(image);

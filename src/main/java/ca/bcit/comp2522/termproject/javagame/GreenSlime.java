@@ -3,8 +3,8 @@ package ca.bcit.comp2522.termproject.javagame;
 import java.util.ArrayList;
 
 public class GreenSlime extends Slime{
-    public GreenSlime(double xPosition, double yPosition) {
-        super(xPosition, yPosition);
+    public GreenSlime(double xPosition, double yPosition, PetriDish petriDish) {
+        super(xPosition, yPosition, petriDish);
     }
 
     @Override
