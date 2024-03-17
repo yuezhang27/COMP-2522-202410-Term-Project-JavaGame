@@ -1,23 +1,23 @@
 package ca.bcit.comp2522.termproject.javagame;
 
-
-
+import javafx.scene.layout.Pane;
 import java.util.ArrayList;
 import java.util.Currency;
-import java.util.function.Predicate;
 
 public class PetriDish {
-    private ArrayList<Slime> container;
-
+    private final ArrayList<Slime> slimesList ;
+    private final ArrayList<Thread> threadList;
     private double mutationProbability;
     private double growSpeed;
     private int petriDishPrice;
     private int petriDishLevel;
-    private SlimeCurrency slimeCurrency = new SlimeCurrency();
+    private final SlimeCurrency slimeCurrency = new SlimeCurrency();
+    private final Pane canvas = new Pane();
 
 
     public PetriDish() {
-        this.container = null;
+        this.slimesList = new ArrayList<>();
+        this.threadList = new ArrayList<>();
         this.mutationProbability = 0.1;
         this.growSpeed = 1.0;
         this.petriDishPrice = 10;
@@ -40,7 +40,16 @@ public class PetriDish {
         if (slime == null) {
             return false;
         } else {
-            this.container.add(slime);
+            this.slimesList.add(slime);
+            return true;
+        }
+    }
+
+    public boolean removeSlime(Slime slime){
+        if (slime == null || this.slimesList.isEmpty()) {
+            return false;
+        } else {
+            this.slimesList.remove(slime);
             return true;
         }
     }
@@ -77,6 +86,20 @@ public class PetriDish {
 
     public void setPetriDishLevel(int newPetriDishLevel) {
         this.petriDishLevel = newPetriDishLevel;
+    }
+    public Pane getCanvas(){
+        return this.canvas;
+    }
+    public void addThread(Thread thread) {
+        threadList.add(thread);
+    }
+
+    public void removeThread(Thread thread) {
+        threadList.remove(thread);
+    }
+
+    public ArrayList<Thread> getThreadList() {
+        return threadList;
     }
 
 
