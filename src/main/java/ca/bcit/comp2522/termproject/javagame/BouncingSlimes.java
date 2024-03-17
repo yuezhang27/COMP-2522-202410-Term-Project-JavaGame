@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -17,40 +18,45 @@ import java.util.Random;
  */
 public class BouncingSlimes extends Application {
 
+    ArrayList<Slime> slimeList = new ArrayList<>();
+
     /**
      * Demonstrates threading in JavaFX.
      * @param primaryStage contains the Scene
      */
     public void start(final Stage primaryStage) {
-        Pane canvas = new Pane();
+        PetriDish petriDish = new PetriDish();
+        Pane canvas = petriDish.getCanvas();
         Scene scene = new Scene(canvas, 500, 500);
-        Slime ball = new YellowSlime(250, 250);
-        Slime slime2 = new BlueSlime(150, 150);
 
-        canvas.getChildren().add(ball);
+        Slime defaultSlime = new YellowSlime(250, 250);
+        defaultSlime.addToPane(canvas);
 
         primaryStage.setTitle("Threads and Balls");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        Thread bouncer = new Thread(ball);
+        Thread bouncer = new Thread(defaultSlime);
         bouncer.setDaemon(true);
+        petriDish.addThread(bouncer);
         bouncer.start();
 
-        Random random = new Random();
-        for (int i = 0; i < 10; ++i) {
-            Slime anotherBall = new YellowSlime(random.nextInt(500), random.nextInt(500));
-            Slime anotherBlue = new BlueSlime(random.nextInt(500),random.nextInt(500));
-//            canvas.getChildren().add(anotherBall);
-            anotherBall.addToPane(canvas);
-            anotherBlue.addToPane(canvas);
-            Thread bouncingBall = new Thread(anotherBall);
-            Thread bouncingBlue = new Thread(anotherBlue);
-            bouncingBall.setDaemon(true);
-            bouncingBlue.setDaemon(true);
-            bouncingBall.start();
-            bouncingBlue.start();
-        }
+//        Random random = new Random();
+//        for (int i = 0; i < 10; ++i) {
+//            Slime anotherBall = new YellowSlime(random.nextInt(500), random.nextInt(500));
+//            Slime anotherBlue = new BlueSlime(random.nextInt(500),random.nextInt(500));
+////            canvas.getChildren().add(anotherBall);
+//            anotherBall.addToPane(canvas);
+//            anotherBlue.addToPane(canvas);
+//            Thread bouncingBall = new Thread(anotherBall);
+//            Thread bouncingBlue = new Thread(anotherBlue);
+//            bouncingBall.setDaemon(true);
+//            bouncingBlue.setDaemon(true);
+//            bouncingBall.start();
+//            bouncingBlue.start();
+//        }
+
+
 
     }
 
