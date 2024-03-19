@@ -36,21 +36,18 @@ public class PetriDish {
 
     }
 
-    public boolean addSlime(Slime slime) {
-        if (slime == null) {
-            return false;
-        } else {
+    public void addSlime(Slime slime) {
+        if (slime != null) {
             this.slimesList.add(slime);
-            return true;
+            this.threadList.add(slime.getThread());
         }
     }
 
-    public boolean removeSlime(Slime slime){
-        if (slime == null || this.slimesList.isEmpty()) {
-            return false;
-        } else {
+    public void removeSlime(Slime slime){
+        if (slime != null && !this.slimesList.isEmpty()) {
             this.slimesList.remove(slime);
-            return true;
+            this.threadList.remove(slime.getThread());
+//            this.getCanvas().getChildren().remove(slime.getImageView());
         }
     }
 
@@ -90,6 +87,7 @@ public class PetriDish {
     public Pane getCanvas(){
         return this.canvas;
     }
+
     public void addThread(Thread thread) {
         threadList.add(thread);
     }
