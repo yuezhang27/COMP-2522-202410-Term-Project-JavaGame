@@ -34,15 +34,11 @@ public abstract class Slime extends Circle implements Runnable {
     private static final int MAX_Y = 475; // vertical edge of enclosing Panel
     private static final int MIN_X = 25; // horizontal edge of enclosing Panel
     private static final int MIN_Y = 75; // vertical edge of enclosing Panel
-
-    //    private int dx; // change in horizontal position of ball
-//    private int dy; // change in vertical position of ball
-
     protected ImageView imageView;
+
 
     public Slime(final double xPosition, final double yPosition, PetriDish petriDish) {
         super(INITIAL_RADIUS, Color.TRANSPARENT);
-//        this.setFill(Color.TRANSPARENT);
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
         this.petriDish = petriDish;
@@ -63,52 +59,59 @@ public abstract class Slime extends Circle implements Runnable {
         return this.size;
     }
 
+// getters
     public double getXCoordinator() {
         return this.xCoordinator;
-    }
-
-    public void setXCoordinator(double newXCoordinator) {
-        this.xCoordinator = newXCoordinator;
     }
 
     public double getYCoordinator() {
         return this.yCoordinator;
     }
 
-    public void setYCoordinator(double newYCoordinator) {
-        this.yCoordinator = newYCoordinator;
-    }
-
     public double getXVelocity() {
         return this.xVelocity;
-    }
-
-    public void setXVelocity(double newXVelocity) {
-        this.xVelocity = newXVelocity;
-    }
-
-    public double getYVelocity() {
-        return this.yVelocity;
-    }
-
-    public void setYVelocity(double newYVelocity) {
-        this.yVelocity = newYVelocity;
-    }
-
-    public int getPrice() {
-        return this.price;
-    }
-
-    public void setPrice(int newPrice) {
-        this.price = newPrice;
     }
 
     public boolean getIsAlive() {
         return this.isAlive;
     }
 
+    public ImageView getImageView() {
+        return this.imageView;
+    }
+
+    public int getPrice() {
+        return this.price;
+    }
+
     public Thread getThread() {
         return this.thread;
+    }
+
+    public double getYVelocity() {
+        return this.yVelocity;
+    }
+
+    //    setters
+
+    public void setXCoordinator(double newXCoordinator) {
+        this.xCoordinator = newXCoordinator;
+    }
+
+    public void setYCoordinator(double newYCoordinator) {
+        this.yCoordinator = newYCoordinator;
+    }
+
+    public void setXVelocity(double newXVelocity) {
+        this.xVelocity = newXVelocity;
+    }
+
+    public void setYVelocity(double newYVelocity) {
+        this.yVelocity = newYVelocity;
+    }
+
+    public void setPrice(int newPrice) {
+        this.price = newPrice;
     }
 
     public void setAlive(boolean newIsAlive) {
@@ -121,10 +124,6 @@ public abstract class Slime extends Circle implements Runnable {
         if (newSize >= 0 && newSize <= 30) {
             this.size = newSize;
         }
-    }
-
-    public ImageView getImageView() {
-        return this.imageView;
     }
 
     //abstract methods
@@ -217,6 +216,7 @@ public abstract class Slime extends Circle implements Runnable {
         if (this.size >= 10) {
             this.split(this.petriDish);
         }
+        petriDish.checkSlimeCountAndKill();
     }
 
     public void startThread() {
@@ -292,9 +292,16 @@ public abstract class Slime extends Circle implements Runnable {
     }
 
 
-
     public void die() {
         this.setAlive(false);
+        this.petriDish.removeThread(this.thread);
+        this.setDeadImageView();
+        this.stopThread();
+    }
+
+    private void setDeadImageView() {
+        Image deadImage = new Image("deadSlime.png");
+        this.imageView.setImage(deadImage);
     }
 
     public void stopThread() {

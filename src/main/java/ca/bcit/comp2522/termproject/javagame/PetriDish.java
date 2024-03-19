@@ -50,6 +50,17 @@ public class PetriDish {
 //            this.getCanvas().getChildren().remove(slime.getImageView());
         }
     }
+    public void checkSlimeCountAndKill() {
+        if (slimesList.size() > 10) {
+            int count = slimesList.size() - 10;
+            for (int i = 0; i < count; i++) {
+                Slime slime = slimesList.get(i);
+                slime.die();
+                removeSlime(slime);
+            }
+        }
+    }
+
 
     //getters
     public double getMutationProbability() {
