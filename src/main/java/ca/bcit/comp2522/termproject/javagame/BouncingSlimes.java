@@ -18,7 +18,6 @@ import java.util.Random;
  */
 public class BouncingSlimes extends Application {
 
-    ArrayList<Slime> slimeList = new ArrayList<>();
 
     /**
      * Demonstrates threading in JavaFX.
@@ -31,7 +30,7 @@ public class BouncingSlimes extends Application {
 
         Slime defaultSlime = new YellowSlime(250, 250, petriDish);
         defaultSlime.addToPane(canvas);
-        defaultSlime.startThread(defaultSlime, petriDish);
+        defaultSlime.startThread();
 
         primaryStage.setTitle("Threads and Balls");
         primaryStage.setScene(scene);
