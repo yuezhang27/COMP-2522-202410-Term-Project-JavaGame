@@ -240,7 +240,6 @@ public abstract class Slime extends Circle implements Runnable {
         rotateTransition.play();
     }
 
-
     public void addToPane(Pane pane) {
         pane.getChildren().add(this);
         if (imageView != null) {
