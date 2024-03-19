@@ -4,6 +4,7 @@ package ca.bcit.comp2522.termproject.javagame;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -21,6 +22,17 @@ import javafx.stage.Stage;
 public class BouncingSlimes extends Application {
 
 
+    private static double balance;
+    public static double getBalance() {
+        return balance;
+    }
+
+//    public static void setBalance(double balance) {
+//        BouncingSlimes.balance = balance;
+//    }
+
+
+
     /**
      * Demonstrates threading in JavaFX.
      * @param primaryStage contains the Scene
@@ -33,10 +45,12 @@ public class BouncingSlimes extends Application {
         Pane canvas = petriDish.getCanvas();
         canvas.getChildren().add(imageView);
         Scene scene = new Scene(canvas, 500, 500);
+        scene.getStylesheets().add("style.css");
         Button sellButton = new Button("Sell Slimes");
-
+        sellButton.getStyleClass().add("button-sell");
         //Logo of Sell button
-        Image sellButtonImage = new Image("path/to/your/image.png");  // 替换为你的图片路径
+//        Image sellButtonImage = new Image("SellButton.png");
+        Image sellButtonImage = new Image("purpleSlime.png");
         ImageView sellImageView = new ImageView(sellButtonImage);
 
         sellImageView.setFitHeight(25);  //Button height
@@ -45,15 +59,20 @@ public class BouncingSlimes extends Application {
 
         sellButton.setGraphic(sellImageView);
         //Coordination of sell button
-        sellButton.setLayoutX(50);
-        sellButton.setLayoutY(50);
+        sellButton.setLayoutX(25);
+        sellButton.setLayoutY(10);
         //Sell button onclick event handler
         sellButton.setOnAction(event -> {
             System.out.println("Sell button clicked");
         });
 
         canvas.getChildren().add(sellButton);
-
+        //HARD CODE BALANCE FOR 500 FOR NOW!!
+        Label balanceLabel = new Label("Balance $: "+getBalance());
+        balanceLabel.setLayoutX(300);
+        balanceLabel.setLayoutY(10);
+        balanceLabel.getStyleClass().add("balance-label");
+        canvas.getChildren().add(balanceLabel);
         Slime defaultSlime = new YellowSlime(250, 250, petriDish);
         defaultSlime.addToPane(canvas);
         defaultSlime.startThread();
