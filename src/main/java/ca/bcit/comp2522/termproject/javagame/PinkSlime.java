@@ -3,6 +3,7 @@ package ca.bcit.comp2522.termproject.javagame;
 import java.util.ArrayList;
 
 public class PinkSlime extends Slime{
+    public static final String PINK_SLIME_IMAGE_NAME = "pinkSlime.png";
     public PinkSlime(double xPosition, double yPosition, PetriDish petriDish) {
         super(xPosition, yPosition, petriDish);
     }
@@ -12,10 +13,6 @@ public class PinkSlime extends Slime{
         return null;
     }
 
-    @Override
-    protected String setConstantSlimeImage(String imgName) {
-        return null;
-    }
 
     @Override
     protected void moveSlime(Slime slime) {
@@ -35,5 +32,10 @@ public class PinkSlime extends Slime{
     @Override
     protected Slime slimeMutation() {
         return null;
+    }
+
+    @Override
+    protected String getConstantSlimeImageName() {
+        return PINK_SLIME_IMAGE_NAME;
     }
 }

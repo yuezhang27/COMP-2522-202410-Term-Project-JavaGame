@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import java.util.ArrayList;
 
 public class BlueSlime extends Slime{
+    public static final String BLUE_SLIME_IMAGE_NAME = "blueSlime.png";
     public static final SlimeType SLIME_TYPE = SlimeType.BLUE_SLIME;
     public static final String SLIME_IMAGE = "blueSlime.png";
     public static final int INITIAL_SIZE = 50;
@@ -32,11 +33,6 @@ public class BlueSlime extends Slime{
     }
 
     @Override
-    protected String setConstantSlimeImage(String imgName) {
-        return SLIME_IMAGE;
-    }
-
-    @Override
     protected void moveSlime(Slime slime) {
 
     }
@@ -54,6 +50,11 @@ public class BlueSlime extends Slime{
     @Override
     protected Slime slimeMutation() {
         return null;
+    }
+
+    @Override
+    protected String getConstantSlimeImageName() {
+        return BLUE_SLIME_IMAGE_NAME;
     }
 
 
