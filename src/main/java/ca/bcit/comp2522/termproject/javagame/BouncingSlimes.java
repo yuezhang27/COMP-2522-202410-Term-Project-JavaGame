@@ -3,6 +3,8 @@ package ca.bcit.comp2522.termproject.javagame;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -23,14 +25,20 @@ public class BouncingSlimes extends Application {
      * @param primaryStage contains the Scene
      */
     public void start(final Stage primaryStage) {
+        Image backgroundImg = new Image("regularPetriDish.png");
+        ImageView imageView = new ImageView(backgroundImg);
+
         PetriDish petriDish = new PetriDish();
         Pane canvas = petriDish.getCanvas();
+        canvas.getChildren().add(imageView);
         Scene scene = new Scene(canvas, 500, 500);
 
         Slime defaultSlime = new YellowSlime(250, 250, petriDish);
         defaultSlime.addToPane(canvas);
         defaultSlime.startThread();
 
+        Image icon = new Image("pinkSlime.png");
+        primaryStage.getIcons().add(icon);
         primaryStage.setTitle("Threads and Balls");
         primaryStage.setScene(scene);
         primaryStage.show();

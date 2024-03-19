@@ -30,8 +30,10 @@ public abstract class Slime extends Circle implements Runnable {
 
     private static final Random GENERATOR = new Random();
 
-    private static final int MAX_X = 500; // horizontal edge of enclosing Panel
-    private static final int MAX_Y = 500; // vertical edge of enclosing Panel
+    private static final int MAX_X = 425; // horizontal edge of enclosing Panel
+    private static final int MAX_Y = 475; // vertical edge of enclosing Panel
+    private static final int MIN_X = 25; // horizontal edge of enclosing Panel
+    private static final int MIN_Y = 75; // vertical edge of enclosing Panel
 
     //    private int dx; // change in horizontal position of ball
 //    private int dy; // change in vertical position of ball
@@ -182,36 +184,21 @@ public abstract class Slime extends Circle implements Runnable {
                 exception.printStackTrace();
             }
             Platform.runLater(() -> {
-                if (this.getCenterY() <= 0 && this.getYVelocity() < 0) {
+                if (this.getCenterY() - this.getRadius() <= MIN_Y && this.getYVelocity() < 0) {
                     yVelocity = GENERATOR.nextInt(1, 6);
-                    animateRotation(imageView, GENERATOR.nextInt(180));
-                    this.grow(1);
-                    if (this.size >= 10) {
-                        this.split(this.petriDish);
-                    }
-                } else if (this.getCenterY() >= MAX_Y && this.getYVelocity() > 0) {
+                    reachEdgeAction();
+                } else if (this.getCenterY() + this.getRadius() >= MAX_Y && this.getYVelocity() > 0) {
                     yVelocity = GENERATOR.nextInt(1, 6) * -1;
-                    animateRotation(imageView, GENERATOR.nextInt(180));
-                    this.grow(1);
-                    if (this.size >= 10) {
-                        this.split(this.petriDish);
-                    }
+                    reachEdgeAction();
                 }
                 // if bounce off left or right of Panel
-                if (this.getCenterX() <= 0 && this.getXVelocity() < 0) {
+                if (this.getCenterX() - this.getRadius() <= MIN_X && this.getXVelocity() < 0) {
                     xVelocity = GENERATOR.nextInt(1, 6);
                     animateRotation(imageView, GENERATOR.nextInt(180));
-                    this.grow(1);
-                    if (this.size >= 10) {
-                        this.split(this.petriDish);
-                    }
-                } else if (this.getCenterX() >= MAX_Y && this.getXVelocity() > 0) {
+                    reachEdgeAction();
+                } else if (this.getCenterX() + this.getRadius() >= MAX_X && this.getXVelocity() > 0) {
                     xVelocity = GENERATOR.nextInt(1, 6) * -1;
-                    animateRotation(imageView, GENERATOR.nextInt(180));
-                    this.grow(1);
-                    if (this.size >= 10) {
-                        this.split(this.petriDish);
-                    }
+                    reachEdgeAction();
                 }
                 // Update the position of the ball
                 this.setCenterX(this.getCenterX() + xVelocity); // determines new x-position
@@ -222,6 +209,13 @@ public abstract class Slime extends Circle implements Runnable {
                     imageView.setY(this.getCenterY() - this.getRadius());
                 }
             });
+        }
+    }
+    private void reachEdgeAction(){
+        animateRotation(imageView, GENERATOR.nextInt(180));
+        this.grow(1);
+        if (this.size >= 10) {
+            this.split(this.petriDish);
         }
     }
 
@@ -284,8 +278,9 @@ public abstract class Slime extends Circle implements Runnable {
     public void grow(int growCoefficient) {
         this.size += growCoefficient;
         System.out.println(this.size);
-        this.imageView.setFitWidth(imageView.getFitWidth() + 3 * growCoefficient);
-        this.imageView.setFitHeight(imageView.getFitHeight() + 3 * growCoefficient);
+        this.setRadius(this.getRadius() + 2 * growCoefficient);
+        imageView.setFitHeight(getRadius() * 2); // 根据Slime大小调整图片大小
+        imageView.setFitWidth(getRadius() * 2);
 
     }
 
