@@ -142,39 +142,6 @@ public abstract class Slime extends Circle implements Runnable {
     /**
      * Bounces the Ball perpetually.
      */
-//    public void run() {
-//        while (true) {
-//            try {
-//                Thread.sleep(20); // sleep for 20 milliseconds
-//            } catch (InterruptedException exception) {
-//                exception.printStackTrace();
-//            }
-//
-//            /*
-//               Long-running operations must not be run on the JavaFX application
-//               thread, since this prevents JavaFX from updating the UI, resulting
-//               in a frozen UI.
-//
-//               Note however that any change to a Node that is part of a "live" scene
-//               graph must happen on the JavaFX application thread.
-//
-//               Platform.runLater can be used to execute those updates on the
-//               JavaFX application thread.
-//             */
-//            Platform.runLater(() -> {
-//                // if bounce off top or bottom of Panel
-//                if (this.getCenterY() <= 0 || this.getCenterY() >= MAX_Y) {
-//                    yVelocity *= -1; // reverses velocity in y direction
-//                }
-//                // if bounce off left or right of Panel
-//                if (this.getCenterX() <= 0 || this.getCenterX() >= MAX_X) {
-//                    xVelocity *= -1; // reverses velocity in x direction
-//                }
-//                this.setCenterX(this.getCenterX() + xVelocity); // determines new x-position
-//                this.setCenterY(this.getCenterY() + yVelocity); // determines new y-position
-//            });
-//        }
-//    }
     public void run() {
         while (running) {
             try {
@@ -255,9 +222,7 @@ public abstract class Slime extends Circle implements Runnable {
     }
 
     public void split(PetriDish petriDish) {
-
         this.shrinkSlimeToBaby();
-
         Slime slimeBaby;
         if (GENERATOR.nextDouble() > MUTATION_COEFFICIENT) {
             slimeBaby = mutation(this.getCenterX(), this.getCenterY());
@@ -279,9 +244,8 @@ public abstract class Slime extends Circle implements Runnable {
         this.size += growCoefficient;
         System.out.println(this.size);
         this.setRadius(this.getRadius() + 2 * growCoefficient);
-        imageView.setFitHeight(getRadius() * 2); // 根据Slime大小调整图片大小
+        imageView.setFitHeight(getRadius() * 2);
         imageView.setFitWidth(getRadius() * 2);
-
     }
 
     public void shrinkSlimeToBaby() {

@@ -3,6 +3,7 @@ package ca.bcit.comp2522.termproject.javagame;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -32,34 +33,35 @@ public class BouncingSlimes extends Application {
         Pane canvas = petriDish.getCanvas();
         canvas.getChildren().add(imageView);
         Scene scene = new Scene(canvas, 500, 500);
+        Button sellButton = new Button("Sell Slimes");
+
+        //Logo of Sell button
+        Image sellButtonImage = new Image("path/to/your/image.png");  // 替换为你的图片路径
+        ImageView sellImageView = new ImageView(sellButtonImage);
+
+        sellImageView.setFitHeight(25);  //Button height
+        sellImageView.setFitWidth(25);   // Buttin width
+        sellImageView.setPreserveRatio(true);
+
+        sellButton.setGraphic(sellImageView);
+        //Coordination of sell button
+        sellButton.setLayoutX(50);
+        sellButton.setLayoutY(50);
+        //Sell button onclick event handler
+        sellButton.setOnAction(event -> {
+            System.out.println("Sell button clicked");
+        });
+
+        canvas.getChildren().add(sellButton);
 
         Slime defaultSlime = new YellowSlime(250, 250, petriDish);
         defaultSlime.addToPane(canvas);
         defaultSlime.startThread();
-
         Image icon = new Image("pinkSlime.png");
         primaryStage.getIcons().add(icon);
         primaryStage.setTitle("Threads and Balls");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
-//        Random random = new Random();
-//        for (int i = 0; i < 10; ++i) {
-//            Slime anotherBall = new YellowSlime(random.nextInt(500), random.nextInt(500));
-//            Slime anotherBlue = new BlueSlime(random.nextInt(500),random.nextInt(500));
-////            canvas.getChildren().add(anotherBall);
-//            anotherBall.addToPane(canvas);
-//            anotherBlue.addToPane(canvas);
-//            Thread bouncingBall = new Thread(anotherBall);
-//            Thread bouncingBlue = new Thread(anotherBlue);
-//            bouncingBall.setDaemon(true);
-//            bouncingBlue.setDaemon(true);
-//            bouncingBall.start();
-//            bouncingBlue.start();
-//        }
-
-
 
     }
 
