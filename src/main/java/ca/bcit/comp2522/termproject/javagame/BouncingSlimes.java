@@ -53,8 +53,8 @@ public class BouncingSlimes extends Application {
         Button sellButton = new Button("Sell Slimes");
         sellButton.getStyleClass().add("button-sell");
         //Logo of Sell button
-//        Image sellButtonImage = new Image("SellButton.png");
-        Image sellButtonImage = new Image("purpleSlime.png");
+        Image sellButtonImage = new Image("SellButton.png");
+//        Image sellButtonImage = new Image("purpleSlime.png");
         ImageView sellImageView = new ImageView(sellButtonImage);
 
         sellImageView.setFitHeight(25);  //Button height
