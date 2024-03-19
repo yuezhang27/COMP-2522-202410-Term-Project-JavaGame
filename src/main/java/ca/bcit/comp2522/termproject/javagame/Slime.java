@@ -4,6 +4,7 @@ import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -25,7 +26,7 @@ public abstract class Slime extends Circle implements Runnable {
     private boolean isAlive;
     private Thread thread;
     private final PetriDish petriDish;
-    private volatile boolean running = true;
+    private boolean running = true;
 
     private static final Random GENERATOR = new Random();
 
@@ -34,6 +35,7 @@ public abstract class Slime extends Circle implements Runnable {
 
     //    private int dx; // change in horizontal position of ball
 //    private int dy; // change in vertical position of ball
+
     protected ImageView imageView;
 
     public Slime(final double xPosition, final double yPosition, PetriDish petriDish) {
@@ -44,6 +46,15 @@ public abstract class Slime extends Circle implements Runnable {
         this.petriDish = petriDish;
         xVelocity = GENERATOR.nextInt(1, 6); // change in x (0 - 4 pixels)
         yVelocity = GENERATOR.nextInt(1, 6); // change in y (0 - 4 pixels)
+        Image image = new Image(getConstantSlimeImageName()); // 替换为实际图片路径
+        imageView = new ImageView(image);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(getRadius() * 2); // 根据Slime大小调整图片大小
+        imageView.setFitWidth(getRadius() * 2);
+
+//         确保图片与Slime的中心对齐
+        imageView.setX(getCenterX() - getRadius());
+        imageView.setY(getCenterY() - getRadius());
     }
 
     public int getSize() {
@@ -94,17 +105,21 @@ public abstract class Slime extends Circle implements Runnable {
         return this.isAlive;
     }
 
+    public Thread getThread() {
+        return this.thread;
+    }
 
     public void setAlive(boolean newIsAlive) {
         if (this.isAlive) {
             this.isAlive = newIsAlive;
         }
     }
+    public ImageView getImageView(){
+        return this.imageView;
+    }
 
-
+//abstract methods
     protected abstract SlimeType setConstantSlimeType(SlimeType slimeType);
-
-    protected abstract String setConstantSlimeImage(String imgName);
 
     protected abstract void moveSlime(Slime slime);
 
@@ -113,6 +128,7 @@ public abstract class Slime extends Circle implements Runnable {
     protected abstract boolean checkIsCollide();
 
     protected abstract Slime slimeMutation();
+    protected abstract String getConstantSlimeImageName();
 
     /**
      * Bounces the Ball perpetually.
@@ -201,11 +217,10 @@ public abstract class Slime extends Circle implements Runnable {
         }
     }
 
-    public void startThread(Slime slime, PetriDish petriDish){
+    public void startThread(){
 //        slime.addToPane(petriDish.getCanvas());
         Thread bouncer = new Thread(this);
         bouncer.setDaemon(true);
-        petriDish.addThread(bouncer);
         bouncer.start();
         this.thread = bouncer;
     }
@@ -225,33 +240,36 @@ public abstract class Slime extends Circle implements Runnable {
         }
     }
 
-    public Slime mutation() {
+    public Slime mutation(double xCoordinator, double yCoordinator) {
         double slimeCoefficient = GENERATOR.nextDouble();
         if (slimeCoefficient <= 0.1) {
-            return new PurpleSlime(this.getXCoordinator(), this.getYCoordinator(), this.petriDish);
+            return new PurpleSlime(xCoordinator, yCoordinator, this.petriDish);
         } else if (slimeCoefficient <= 0.3) {
-            return new PinkSlime(this.getXCoordinator(), this.getYCoordinator(), this.petriDish);
+            return new PinkSlime(xCoordinator, yCoordinator, this.petriDish);
         } else if (slimeCoefficient <= 0.6) {
-            return new BlueSlime(this.getXCoordinator(), this.getYCoordinator(), this.petriDish);
+            return new BlueSlime(xCoordinator, yCoordinator, this.petriDish);
         } else {
-            return new GreenSlime(this.getXCoordinator(), this.getYCoordinator(), this.petriDish);
+            return new GreenSlime(xCoordinator, yCoordinator, this.petriDish);
         }
     }
 
     public void split(PetriDish petriDish) {
         petriDish.removeSlime(this);
-        petriDish.removeThread(this.thread);
         this.stopThread();
         for (int i = 1; i <= 2; i++) {
             Slime slimeBaby;
             if (GENERATOR.nextDouble() > MUTATION_COEFFICIENT) {
-                slimeBaby = mutation();
+                slimeBaby = mutation(this.getCenterX(), this.getCenterY());
             } else {
-                slimeBaby = new YellowSlime(this.getXCoordinator(), this.getYCoordinator(), this.petriDish);
+                slimeBaby = new YellowSlime(this.getCenterX(), this.getCenterY(), this.petriDish);
             }
             petriDish.addSlime(slimeBaby);
-            petriDish.addThread(this.thread);
-            slimeBaby.startThread(this, petriDish);
+            slimeBaby.startThread();
+            Platform.runLater(() -> {
+                // 添加新的 Slime 图片到 Pane 上
+                slimeBaby.addToPane(petriDish.getCanvas());
+                petriDish.getCanvas().getChildren().remove(this.imageView);
+            });
         }
     }
 
