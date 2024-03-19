@@ -6,8 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.Random;
+
 
 /**
  * BouncingBalls, an introduction to threading and JavaFX.

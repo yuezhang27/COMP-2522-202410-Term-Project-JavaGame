@@ -2,8 +2,6 @@ package ca.bcit.comp2522.termproject.javagame;
 
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -16,8 +14,10 @@ import java.util.Random;
 
 public abstract class Slime extends Circle implements Runnable {
     public static final double MUTATION_COEFFICIENT = 0.5;
-    public static final int INITIAL_IMAGE_SIZE = 10;
-    private int size;
+    public static final int INITIAL_RADIUS = 10;
+//    public static final int INITIAL_RADIUS = 10;
+    public static final int INITIAL_SIZE = 1;
+    private int size = INITIAL_SIZE;
     private double xCoordinator;
     private double yCoordinator;
     private double xVelocity;
@@ -39,7 +39,7 @@ public abstract class Slime extends Circle implements Runnable {
     protected ImageView imageView;
 
     public Slime(final double xPosition, final double yPosition, PetriDish petriDish) {
-        super(INITIAL_IMAGE_SIZE, Color.TRANSPARENT);
+        super(INITIAL_RADIUS, Color.TRANSPARENT);
 //        this.setFill(Color.TRANSPARENT);
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
@@ -114,11 +114,18 @@ public abstract class Slime extends Circle implements Runnable {
             this.isAlive = newIsAlive;
         }
     }
-    public ImageView getImageView(){
+
+    public void setSize(int newSize) {
+        if (newSize >= 0 && newSize <= 30) {
+            this.size = newSize;
+        }
+    }
+
+    public ImageView getImageView() {
         return this.imageView;
     }
 
-//abstract methods
+    //abstract methods
     protected abstract SlimeType setConstantSlimeType(SlimeType slimeType);
 
     protected abstract void moveSlime(Slime slime);
@@ -128,6 +135,7 @@ public abstract class Slime extends Circle implements Runnable {
     protected abstract boolean checkIsCollide();
 
     protected abstract Slime slimeMutation();
+
     protected abstract String getConstantSlimeImageName();
 
     /**
@@ -217,7 +225,7 @@ public abstract class Slime extends Circle implements Runnable {
         }
     }
 
-    public void startThread(){
+    public void startThread() {
 //        slime.addToPane(petriDish.getCanvas());
         Thread bouncer = new Thread(this);
         bouncer.setDaemon(true);
@@ -254,42 +262,47 @@ public abstract class Slime extends Circle implements Runnable {
     }
 
     public void split(PetriDish petriDish) {
-        petriDish.removeSlime(this);
-        this.stopThread();
-        for (int i = 1; i <= 2; i++) {
-            Slime slimeBaby;
-            if (GENERATOR.nextDouble() > MUTATION_COEFFICIENT) {
-                slimeBaby = mutation(this.getCenterX(), this.getCenterY());
-            } else {
-                slimeBaby = new YellowSlime(this.getCenterX(), this.getCenterY(), this.petriDish);
-            }
-            petriDish.addSlime(slimeBaby);
-            slimeBaby.startThread();
-            Platform.runLater(() -> {
-                // 添加新的 Slime 图片到 Pane 上
-                slimeBaby.addToPane(petriDish.getCanvas());
-                petriDish.getCanvas().getChildren().remove(this.imageView);
-            });
-        }
-    }
 
+        this.shrinkSlimeToBaby();
+
+        Slime slimeBaby;
+        if (GENERATOR.nextDouble() > MUTATION_COEFFICIENT) {
+            slimeBaby = mutation(this.getCenterX(), this.getCenterY());
+        } else {
+            slimeBaby = new YellowSlime(this.getCenterX(), this.getCenterY(), this.petriDish);
+        }
+        petriDish.addSlime(slimeBaby);
+        slimeBaby.startThread();
+        Platform.runLater(() -> {
+            // 添加新的 Slime 图片到 Pane 上
+            slimeBaby.addToPane(petriDish.getCanvas());
+//            petriDish.getCanvas().getChildren().remove(this.imageView);
+        });
+
+    }
 
 
     public void grow(int growCoefficient) {
         this.size += growCoefficient;
         System.out.println(this.size);
-        this.imageView.setFitWidth(imageView.getFitWidth() + 2 * growCoefficient);
-        this.imageView.setFitHeight(imageView.getFitHeight() + 2 * growCoefficient);
+        this.imageView.setFitWidth(imageView.getFitWidth() + 3 * growCoefficient);
+        this.imageView.setFitHeight(imageView.getFitHeight() + 3 * growCoefficient);
 
     }
 
-    public void removeSlime(PetriDish petriDish){
-        petriDish.removeSlime(this);
+    public void shrinkSlimeToBaby() {
+        this.size = INITIAL_SIZE;
+        this.setRadius(INITIAL_RADIUS);
+        this.imageView.setFitWidth(INITIAL_RADIUS * 2);
+        this.imageView.setFitHeight(INITIAL_RADIUS * 2);
     }
 
-    public void die(){
+
+
+    public void die() {
         this.setAlive(false);
     }
+
     public void stopThread() {
         running = false;
     }
