@@ -23,6 +23,11 @@ public abstract class Slime extends Circle implements Runnable {
     private double xVelocity;
     private double yVelocity;
     private int price;
+    public static int totalNumberOfSlime;
+
+
+
+    private int slimeId;
     private boolean isAlive;
     private Thread thread;
     private final PetriDish petriDish;
@@ -39,6 +44,8 @@ public abstract class Slime extends Circle implements Runnable {
 
     public Slime(final double xPosition, final double yPosition, PetriDish petriDish) {
         super(INITIAL_RADIUS, Color.TRANSPARENT);
+        totalNumberOfSlime++;
+        this.slimeId = totalNumberOfSlime;
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
         this.petriDish = petriDish;
@@ -57,6 +64,9 @@ public abstract class Slime extends Circle implements Runnable {
 
     public int getSize() {
         return this.size;
+    }
+    public int getSlimeId() {
+        return slimeId;
     }
 
 // getters

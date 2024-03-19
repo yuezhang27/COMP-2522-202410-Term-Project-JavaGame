@@ -1,11 +1,14 @@
 package ca.bcit.comp2522.termproject.javagame;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GreenSlime extends Slime{
     public static final String GREEN_SLIME_IMAGE_NAME = "greenSlime.png";
     public GreenSlime(double xPosition, double yPosition, PetriDish petriDish) {
         super(xPosition, yPosition, petriDish);
+        //绿色：20-29
+        this.setPrice(new Random().nextInt(20,30));
     }
 
     @Override

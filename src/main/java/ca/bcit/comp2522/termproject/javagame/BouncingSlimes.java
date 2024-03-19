@@ -2,13 +2,17 @@ package ca.bcit.comp2522.termproject.javagame;
 
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.scene.control.ListCell;
+
 
 
 
@@ -64,6 +68,26 @@ public class BouncingSlimes extends Application {
         //Sell button onclick event handler
         sellButton.setOnAction(event -> {
             System.out.println("Sell button clicked");
+            ListView<Slime> slimeListView = new ListView<>(FXCollections.observableArrayList(petriDish.getSlimesList()));
+            slimeListView.setCellFactory(lv -> new ListCell<Slime>() {
+                @Override
+                protected void updateItem(Slime slime, boolean empty) {
+                    super.updateItem(slime, empty);
+                    if (empty || slime == null) {
+                        setText(null);
+                    } else {
+                        setText("Slime " + slime.getSlimeId() + " - $" + slime.getPrice());
+                    }
+                }
+            });
+            // Coordination X, Y of the Listview (Slime list)
+            slimeListView.setLayoutX(50);
+            slimeListView.setLayoutY(100);
+            slimeListView.setPrefSize(200, 300);
+
+            // AVOID REPETITION
+            canvas.getChildren().removeIf(node -> node instanceof ListView);
+            canvas.getChildren().add(slimeListView);
         });
 
         canvas.getChildren().add(sellButton);

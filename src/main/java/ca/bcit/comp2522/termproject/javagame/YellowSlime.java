@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class YellowSlime extends Slime{
     public static final String YELLOW_SLIME_IMAGE_NAME = "yellowSlime.png";
@@ -12,6 +13,8 @@ public class YellowSlime extends Slime{
 
     public YellowSlime(double xPosition, double yPosition, PetriDish petriDish){
         super(xPosition, yPosition, petriDish);
+        //黄色价格上限：10
+        this.setPrice(new Random().nextInt(10));
         // 设置黄色粘液的图片
 
 

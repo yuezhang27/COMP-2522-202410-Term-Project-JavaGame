@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Currency;
 
 public class PetriDish {
+
+
     private final ArrayList<Slime> slimesList ;
     private final ArrayList<Thread> threadList;
     private double mutationProbability;
@@ -77,6 +79,9 @@ public class PetriDish {
 
     public int getPetriDishLevel() {
         return this.petriDishLevel;
+    }
+    public ArrayList<Slime> getSlimesList() {
+        return slimesList;
     }
 
     //setters

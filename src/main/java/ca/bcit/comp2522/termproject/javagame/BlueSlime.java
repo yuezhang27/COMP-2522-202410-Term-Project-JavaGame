@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BlueSlime extends Slime{
     public static final String BLUE_SLIME_IMAGE_NAME = "blueSlime.png";
@@ -13,6 +14,8 @@ public class BlueSlime extends Slime{
 
     public BlueSlime(double xPosition, double yPosition, PetriDish petriDish){
         super(xPosition, yPosition, petriDish);
+        //蓝色：11-20价格
+        this.setPrice(new Random().nextInt(11,20));
         // 设置黄色粘液的图片
         Image image = new Image(SLIME_IMAGE); // 替换为实际图片路径
         imageView = new ImageView(image);

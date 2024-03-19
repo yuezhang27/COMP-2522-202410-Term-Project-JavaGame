@@ -1,11 +1,13 @@
 package ca.bcit.comp2522.termproject.javagame;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PurpleSlime extends Slime {
     public static final String PURPLE_SLIME_IMAGE_NAME = "purpleSlime.png";
     public PurpleSlime(double xPosition, double yPosition, PetriDish petriDish) {
         super(xPosition, yPosition, petriDish);
+        this.setPrice(new Random().nextInt(40,50));
     }
 
     @Override
