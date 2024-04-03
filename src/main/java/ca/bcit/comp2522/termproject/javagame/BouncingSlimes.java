@@ -1,19 +1,21 @@
 package ca.bcit.comp2522.termproject.javagame;
 
 
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.scene.control.ListCell;
+import javafx.util.Duration;
+import javafx.animation.Timeline;
 
 
 /**
@@ -60,6 +62,14 @@ public class BouncingSlimes extends Application {
         Player player = new Player();
         Label balanceLabel = createBalanceLabel(player);
         canvas.getChildren().add(balanceLabel);
+
+        ProgressBar progressBar = createVerticalProgressBar();
+        progressBar.setLayoutX(280);
+        progressBar.setLayoutY(200);
+
+        createNewTimeline(progressBar);
+        canvas.getChildren().add(progressBar);
+
         Image icon = new Image("pinkSlime.png");
         primaryStage.getIcons().add(icon);
         primaryStage.setTitle("Threads and Balls");
@@ -99,7 +109,7 @@ public class BouncingSlimes extends Application {
 
     private Label createBalanceLabel(Player player) {
         Label balanceLabel = new Label("\uD83D\uDCB0Balance $: " + player.getBalance());
-        balanceLabel.setLayoutX(300);
+        balanceLabel.setLayoutX(280);
         balanceLabel.setLayoutY(10);
         balanceLabel.getStyleClass().add("balance-label");
         balanceLabel.setFont(Font.font("Segoe UI Emoji"));
@@ -116,6 +126,10 @@ public class BouncingSlimes extends Application {
                     setText(null);
                 } else {
                     setText(slime.getName() + slime.getSlimeId() + " - $" + slime.getPrice());
+                    ImageView slimeCategory = new ImageView(slime.getSlimeImage());
+                    slimeCategory.setFitWidth(10);
+                    slimeCategory.setFitHeight(10);
+                    setGraphic(slimeCategory);
                 }
             }
         });
@@ -131,6 +145,25 @@ public class BouncingSlimes extends Application {
         Slime defaultSlime = new YellowSlime(250, 250, petriDish);
         defaultSlime.addToPane(canvas);
         defaultSlime.startThread();
+    }
+
+    private ProgressBar createVerticalProgressBar() {
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.getStyleClass().add("vertical-progress-bar");
+        progressBar.setPrefSize(400, 30);
+        return progressBar;
+    }
+
+    private void createNewTimeline(ProgressBar progressBar) {
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.seconds(40), new KeyValue(progressBar.progressProperty(), 0)),
+                new KeyFrame(Duration.seconds(0), e-> {
+                    // do anything you need here on completion...
+                    System.out.println("Minute over");
+                }, new KeyValue(progressBar.progressProperty(), 1))
+        );
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.play();
     }
 
     /**
