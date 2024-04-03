@@ -13,7 +13,6 @@ public class PetriDish {
     private double growSpeed;
     private int petriDishPrice;
     private int petriDishLevel;
-    private final SlimeCurrency slimeCurrency = new SlimeCurrency();
     private final Pane canvas = new Pane();
 
 
@@ -26,11 +25,11 @@ public class PetriDish {
         this.petriDishLevel = 1;
     }
 
-    public boolean upgradePetrDish(Currency currency, int cost) {
+    public boolean upgradePetrDish(Player player, int cost) {
         if (this.petriDishLevel == 3) {
             return false;
         }
-        slimeCurrency.reduceBalance(cost);
+        player.reduceBalance(cost);
         this.petriDishLevel +=1;
         this.growSpeed += 0.5;
         this.mutationProbability += 0.2;
