@@ -70,6 +70,9 @@ public class BouncingSlimes extends Application {
         createNewTimeline(progressBar);
         canvas.getChildren().add(progressBar);
 
+        ImageView soupBtn = createSoupBtn(player, balanceLabel);
+        canvas.getChildren().add(soupBtn);
+
         Image icon = new Image("pinkSlime.png");
         primaryStage.getIcons().add(icon);
         primaryStage.setTitle("Threads and Balls");
@@ -105,6 +108,32 @@ public class BouncingSlimes extends Application {
         sellButton.setLayoutX(25);
         sellButton.setLayoutY(10);
         return sellButton;
+    }
+
+    private ImageView createSoupBtn(Player player, Label balanceLabel) {
+        Image image = new Image("soup_btn.png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(120);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(200);
+        imageView.setLayoutX(370);
+        imageView.setLayoutY(420);
+
+        imageView.setOnMouseClicked(mouseEvent -> {
+            player.reduceBalance(1);
+            balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
+        });
+        imageView.setOnMouseEntered(mouseEvent -> {
+            imageView.setFitWidth(130);
+            imageView.setPreserveRatio(true);
+
+        });
+        imageView.setOnMouseExited(mouseEvent -> {
+            imageView.setFitWidth(120);
+            imageView.setPreserveRatio(true);
+        });
+
+        return imageView;
     }
 
     private Label createBalanceLabel(Player player) {
@@ -150,7 +179,7 @@ public class BouncingSlimes extends Application {
     private ProgressBar createVerticalProgressBar() {
         ProgressBar progressBar = new ProgressBar();
         progressBar.getStyleClass().add("vertical-progress-bar");
-        progressBar.setPrefSize(400, 30);
+        progressBar.setPrefSize(400, 25);
         return progressBar;
     }
 
