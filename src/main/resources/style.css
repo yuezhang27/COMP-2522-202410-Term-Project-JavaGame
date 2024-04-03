@@ -9,5 +9,16 @@
 .balance-label {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
-    -fx-text-fill: gold;
+    -fx-text-fill: #7B68EE;
+    -fx-background-color: white;
+    -fx-background-radius: 50px;
+    -fx-padding: 0px 10px;
+}
+
+.vertical-progress-bar {
+    -fx-rotate: -90;
+    -fx-border-color: #7B68EE;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50px;
+    -fx-box-border: goldenrod;
 }
