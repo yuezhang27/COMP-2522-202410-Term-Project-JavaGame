@@ -5,6 +5,13 @@
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
+.button-sell:hover {
+    -fx-background-color: linear-gradient(#c74294, #eb4ba3);
+}
+
+.button-sell_clicked {
+    -fx-background-color: linear-gradient(#c74294, #eb4ba3);
+}
 
 .balance-label {
     -fx-font-size: 20px;
@@ -17,8 +24,5 @@
 
 .vertical-progress-bar {
     -fx-rotate: -90;
-    -fx-border-color: #7B68EE;
-    -fx-border-width: 2px;
-    -fx-border-radius: 50px;
-    -fx-box-border: goldenrod;
+    -fx-accent: #ff7e33;
 }
