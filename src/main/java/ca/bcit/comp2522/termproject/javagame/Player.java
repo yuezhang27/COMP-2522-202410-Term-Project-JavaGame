@@ -4,7 +4,7 @@ public class Player {
     private int balance;
 
     public Player() {
-        this.balance = 0;
+        this.balance = 10;
 
     }
     public void increaseBalance(int income) {

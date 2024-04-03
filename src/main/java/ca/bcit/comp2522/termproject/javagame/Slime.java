@@ -18,11 +18,13 @@ public abstract class Slime extends Circle implements Runnable {
 //    public static final int INITIAL_RADIUS = 10;
     public static final int INITIAL_SIZE = 1;
     private int size = INITIAL_SIZE;
+    private String slimeImage;
     private double xCoordinator;
     private double yCoordinator;
     private double xVelocity;
     private double yVelocity;
     private int price;
+    private String name;
     public static int totalNumberOfSlime;
 
 
@@ -46,6 +48,7 @@ public abstract class Slime extends Circle implements Runnable {
         super(INITIAL_RADIUS, Color.TRANSPARENT);
         totalNumberOfSlime++;
         this.slimeId = totalNumberOfSlime;
+        this.setSlimeImage(getConstantSlimeImageName());
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
         this.petriDish = petriDish;
@@ -68,6 +71,7 @@ public abstract class Slime extends Circle implements Runnable {
     public int getSlimeId() {
         return slimeId;
     }
+    public String getName() {return this.name;}
 
 // getters
     public double getXCoordinator() {
@@ -148,6 +152,14 @@ public abstract class Slime extends Circle implements Runnable {
     protected abstract Slime slimeMutation();
 
     protected abstract String getConstantSlimeImageName();
+    public String getSlimeImage(){
+        return this.slimeImage;
+    }
+    public void setSlimeImage(String newImage){
+        if (newImage != null) {
+            this.slimeImage = newImage;
+        }
+    }
 
     /**
      * Bounces the Ball perpetually.
