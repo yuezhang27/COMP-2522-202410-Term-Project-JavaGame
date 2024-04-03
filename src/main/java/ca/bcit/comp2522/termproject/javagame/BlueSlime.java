@@ -16,11 +16,12 @@ public class BlueSlime extends Slime{
         super(xPosition, yPosition, petriDish);
         //蓝色：11-20价格
         this.setPrice(new Random().nextInt(11,20));
+
         // 设置黄色粘液的图片
-        Image image = new Image(SLIME_IMAGE); // 替换为实际图片路径
+        Image image = new Image(SLIME_IMAGE);
         imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        imageView.setFitHeight(getRadius() * 2); // 根据Slime大小调整图片大小
+        imageView.setFitHeight(getRadius() * 2);
         imageView.setFitWidth(getRadius() * 2);
 
 //         确保图片与Slime的中心对齐
