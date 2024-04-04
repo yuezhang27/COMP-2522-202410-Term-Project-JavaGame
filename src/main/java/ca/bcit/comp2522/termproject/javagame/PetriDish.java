@@ -13,6 +13,7 @@ public class PetriDish {
     private double growSpeed;
     private int petriDishPrice;
     private int petriDishLevel;
+    private boolean isStopThread = true;
     private final Pane canvas = new Pane();
 
 
@@ -88,6 +89,10 @@ public class PetriDish {
         this.mutationProbability = newMutationProbability;
     }
 
+    public void setStopThread(boolean newStopThread) {
+        this.isStopThread = newStopThread;
+    }
+
     public void setGrowSpeed(double newGrowSpeed) {
         this.growSpeed = newGrowSpeed;
     }
@@ -102,7 +107,7 @@ public class PetriDish {
     public Pane getCanvas(){
         return this.canvas;
     }
-
+    public boolean getIsStopThread(){return this.isStopThread;}
     public void addThread(Thread thread) {
         threadList.add(thread);
     }

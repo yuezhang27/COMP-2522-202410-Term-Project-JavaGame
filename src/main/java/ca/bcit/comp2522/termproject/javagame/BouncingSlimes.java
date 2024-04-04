@@ -52,7 +52,6 @@ public class BouncingSlimes extends Application {
 
         //Sell button onclick event handler
         sellButton.setOnMouseClicked(event -> {
-            System.out.println("Sell button clicked");
             ListView<Slime> slimeListView = createSlimeListView(petriDish);
             Stage listStage = new Stage();
             listStage.setTitle("Slime List");
@@ -71,16 +70,16 @@ public class BouncingSlimes extends Application {
 
         buttonCanvas.getChildren().add(sellButton);
 
-        ImageView soupBtn = createSoupBtn(player, balanceLabel);
-        buttonCanvas.getChildren().add(soupBtn);
 
         ProgressBar progressBar = createVerticalProgressBar();
-        progressBar.setLayoutX(280);
-        progressBar.setLayoutY(200);
 
-        createNewTimeline(progressBar);
+
+        Timeline timeline = createNewTimeline(progressBar);
+        addActionToProgressBar(timeline, progressBar, petriDish);
         petriDishCanvas.getChildren().add(progressBar);
 
+        ImageView soupBtn = createSoupBtn(player, balanceLabel, progressBar, timeline);
+        buttonCanvas.getChildren().add(soupBtn);
 
         rootPane.getChildren().add(petriDishCanvas);
         rootPane.getChildren().add(buttonCanvas);
@@ -124,7 +123,7 @@ public class BouncingSlimes extends Application {
         return sellButton;
     }
 
-    private ImageView createSoupBtn(Player player, Label balanceLabel) {
+    private ImageView createSoupBtn(Player player, Label balanceLabel, ProgressBar progressBar, Timeline timeline) {
         Image image = new Image("soup_btn.png");
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(120);
@@ -134,8 +133,12 @@ public class BouncingSlimes extends Application {
         imageView.setLayoutY(420);
 
         imageView.setOnMouseClicked(mouseEvent -> {
-            player.reduceBalance(1);
-            balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
+            if (player.reduceBalance(1)) {
+                updateTimeline(timeline, progressBar, 0.25, 40);
+                balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
+
+            }
+
         });
         imageView.setOnMouseEntered(mouseEvent -> {
             imageView.setFitWidth(130);
@@ -206,19 +209,61 @@ public class BouncingSlimes extends Application {
         ProgressBar progressBar = new ProgressBar();
         progressBar.getStyleClass().add("vertical-progress-bar");
         progressBar.setPrefSize(400, 25);
+        progressBar.setLayoutX(280);
+        progressBar.setLayoutY(200);
         return progressBar;
     }
 
-    private void createNewTimeline(ProgressBar progressBar) {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(40), new KeyValue(progressBar.progressProperty(), 0)),
+    private Timeline createNewTimeline(ProgressBar progressBar) {
+        return new Timeline(
+                new KeyFrame(Duration.seconds(20), new KeyValue(progressBar.progressProperty(), 0)),
                 new KeyFrame(Duration.seconds(0), e-> {
-                    // do anything you need here on completion...
-                    System.out.println("Minute over");
+//                    start from 1
                 }, new KeyValue(progressBar.progressProperty(), 1))
         );
-        timeline.setCycleCount(Animation.INDEFINITE);
+
+    }
+
+    private void updateTimeline(Timeline timeline, ProgressBar progressBar, double increasedPercentage, double totalTime) {
+        double remainingProgressBar = progressBar.getProgress(); //0.8
+        double timeOver = timeline.getCurrentTime().toSeconds();
+        if (remainingProgressBar + increasedPercentage > 1) {
+            increasedPercentage = 1 - remainingProgressBar;
+        }
+
+        double newProgressBarPercentage = increasedPercentage + remainingProgressBar;
+        System.out.println("newProgressBarPercentage" + newProgressBarPercentage);
+
+        double currentDuration = totalTime * newProgressBarPercentage;
+        System.out.println("currentDuration" + currentDuration);
+
+
+
+        timeline.stop();
+
+        timeline.getKeyFrames().setAll(
+                new KeyFrame(Duration.seconds(currentDuration),
+                        new KeyValue(progressBar.progressProperty(), 0)),
+                new KeyFrame(Duration.seconds(0), e-> {
+                }, new KeyValue(progressBar.progressProperty(), newProgressBarPercentage))
+                );
+
         timeline.play();
+
+    }
+    private void addActionToProgressBar(Timeline timeline, ProgressBar progressBar, PetriDish petriDish){
+        timeline.setCycleCount(1);
+        timeline.play();
+        progressBar.progressProperty().addListener(((observableValue, number, newValue) -> {
+            if (newValue.doubleValue() == 0) {
+                timeline.stop();
+                gameEnd(petriDish);
+            }
+        } ));
+    }
+    void gameEnd(PetriDish petriDish){
+        petriDish.setStopThread(false);
+
     }
 
     /**

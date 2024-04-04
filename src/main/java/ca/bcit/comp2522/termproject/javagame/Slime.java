@@ -167,7 +167,7 @@ public abstract class Slime extends Circle implements Runnable {
      * Bounces the Ball perpetually.
      */
     public void run() {
-        while (running) {
+        while (running && petriDish.getIsStopThread()) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException exception) {
@@ -266,7 +266,6 @@ public abstract class Slime extends Circle implements Runnable {
 
     public void grow(int growCoefficient) {
         this.size += growCoefficient;
-        System.out.println(this.size);
         this.setRadius(this.getRadius() + 2 * growCoefficient);
         imageView.setFitHeight(getRadius() * 2);
         imageView.setFitWidth(getRadius() * 2);
