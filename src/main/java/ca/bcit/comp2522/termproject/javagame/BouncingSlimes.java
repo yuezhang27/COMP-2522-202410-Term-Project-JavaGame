@@ -9,9 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -169,12 +167,24 @@ public class BouncingSlimes extends Application {
                 super.updateItem(slime, empty);
                 if (empty || slime == null) {
                     setText(null);
+                    setGraphic(null);
                 } else {
                     setText(slime.getName() + slime.getSlimeId() + " - $" + slime.getPrice());
+                    HBox hbox = new HBox(10);
+                    hbox.setAlignment(Pos.CENTER_RIGHT);
+
                     ImageView slimeCategory = new ImageView(slime.getSlimeImage());
                     slimeCategory.setFitWidth(10);
                     slimeCategory.setFitHeight(10);
-                    setGraphic(slimeCategory);
+
+                    Button button = new Button("Sell");
+                    button.setOnAction(e -> {
+//                        addEventToSellButton(button);
+                    });
+                    hbox.getChildren().addAll(button, slimeCategory);
+
+
+                    setGraphic(hbox);
                 }
             }
         });
