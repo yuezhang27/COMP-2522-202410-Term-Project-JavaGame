@@ -10,8 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -36,42 +36,58 @@ public class BouncingSlimes extends Application {
     public void start(final Stage primaryStage) {
 //        set up canvas
         PetriDish petriDish = new PetriDish();
-        Pane canvas = setupCanvas(petriDish);
-
-        Scene scene = new Scene(canvas, 500, 500);
+        Pane petriDishCanvas = setupCanvas(petriDish);
+        StackPane rootPane = new StackPane();
+        Scene scene = new Scene(rootPane, 500, 500);
         scene.getStylesheets().add("style.css");
 
         Button sellButton = createSellBtn();
 
-        AnchorPane slimeListCanvas = new AnchorPane();
-
-        //Sell button onclick event handler
-        sellButton.setOnAction(event -> {
-            System.out.println("Sell button clicked");
-            ListView<Slime> slimeListView = createSlimeListView(petriDish);
-            slimeListCanvas.getChildren().addFirst(slimeListView);
-            slimeListCanvas.toFront();
-            // AVOID REPETITION
-            canvas.getChildren().removeIf(node -> node instanceof ListView);
-            canvas.getChildren().add(slimeListCanvas);
-        });
-
-        canvas.getChildren().add(sellButton);
-
         //HARD CODE BALANCE FOR 500 FOR NOW!!
         Player player = new Player();
         Label balanceLabel = createBalanceLabel(player);
-        canvas.getChildren().add(balanceLabel);
+        petriDishCanvas.getChildren().add(balanceLabel);
+
+//create a second pane for buttons
+        Pane buttonCanvas = new Pane();
+        buttonCanvas.setPrefSize(500, 500);
+
+        //Sell button onclick event handler
+        sellButton.setOnMouseClicked(event -> {
+            System.out.println("Sell button clicked");
+            ListView<Slime> slimeListView = createSlimeListView(petriDish);
+            Stage listStage = new Stage();
+            listStage.setTitle("Slime List");
+            Image icon = new Image("pinkSlime.png");
+            listStage.getIcons().add(icon);
+
+            Scene listScene = new Scene(new StackPane(slimeListView), 300, 300);
+            listStage.setScene(listScene);
+            listStage.show();
+//            buttonCanvas.getChildren().addFirst(slimeListView);
+//
+//            // AVOID REPETITION
+//            buttonCanvas.getChildren().removeIf(node -> node instanceof ListView);
+//            buttonCanvas.getChildren().add(slimeListView);
+        });
+
+        buttonCanvas.getChildren().add(sellButton);
+
+        ImageView soupBtn = createSoupBtn(player, balanceLabel);
+        buttonCanvas.getChildren().add(soupBtn);
 
         ProgressBar progressBar = createVerticalProgressBar();
         progressBar.setLayoutX(280);
         progressBar.setLayoutY(200);
 
         createNewTimeline(progressBar);
-        canvas.getChildren().add(progressBar);
+        petriDishCanvas.getChildren().add(progressBar);
 
-        ImageView soupBtn = createSoupBtn(player, balanceLabel);
-        canvas.getChildren().add(soupBtn);
+
+        rootPane.getChildren().add(petriDishCanvas);
+        rootPane.getChildren().add(buttonCanvas);
+
+
 
         Image icon = new Image("pinkSlime.png");
         primaryStage.getIcons().add(icon);
@@ -80,7 +96,7 @@ public class BouncingSlimes extends Application {
         primaryStage.show();
 
 //        add a default slime to start the game
-        addDefaultSlime(canvas, petriDish);
+        addDefaultSlime(petriDishCanvas, petriDish);
 
     }
 
@@ -98,12 +114,12 @@ public class BouncingSlimes extends Application {
         //Logo of Sell button
         Image sellButtonImage = new Image("SellButton.png");
         ImageView sellImageView = new ImageView(sellButtonImage);
+        sellButton.setGraphic(sellImageView);
 
         sellImageView.setFitHeight(25);  //Button height
         sellImageView.setFitWidth(25);   // Buttin width
         sellImageView.setPreserveRatio(true);
 
-        sellButton.setGraphic(sellImageView);
         //Coordination of sell button
         sellButton.setLayoutX(25);
         sellButton.setLayoutY(10);

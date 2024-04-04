@@ -24,7 +24,7 @@ public abstract class Slime extends Circle implements Runnable {
     private double xVelocity;
     private double yVelocity;
     private int price;
-    private String name;
+    private final String NAME;
     public static int totalNumberOfSlime;
 
 
@@ -48,6 +48,7 @@ public abstract class Slime extends Circle implements Runnable {
         super(INITIAL_RADIUS, Color.TRANSPARENT);
         totalNumberOfSlime++;
         this.slimeId = totalNumberOfSlime;
+        this.NAME = setConstantName();
         this.setSlimeImage(getConstantSlimeImageName());
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
@@ -71,7 +72,7 @@ public abstract class Slime extends Circle implements Runnable {
     public int getSlimeId() {
         return slimeId;
     }
-    public String getName() {return this.name;}
+    public String getName() {return this.NAME;}
 
 // getters
     public double getXCoordinator() {
@@ -141,6 +142,7 @@ public abstract class Slime extends Circle implements Runnable {
     }
 
     //abstract methods
+    protected abstract String setConstantName();
     protected abstract SlimeType setConstantSlimeType(SlimeType slimeType);
 
     protected abstract void moveSlime(Slime slime);
