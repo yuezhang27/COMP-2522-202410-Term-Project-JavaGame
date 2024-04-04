@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class YellowSlime extends Slime{
     public static final String YELLOW_SLIME_IMAGE_NAME = "yellowSlime.png";
+    public static final String YELLOW_SLIME_NAME = "Yellow Slime";
     public static final SlimeType SLIME_TYPE = SlimeType.YELLOW_SLIME;
     public static final int INITIAL_SIZE = 50;
 
@@ -21,6 +22,12 @@ public class YellowSlime extends Slime{
         // 将ImageView添加到Slime的父节点中，如果有的话
 //        this.getParent().getChildren().add(imageView);
     }
+
+    @Override
+    protected String setConstantName() {
+        return YELLOW_SLIME_NAME;
+    }
+
     @Override
     protected SlimeType setConstantSlimeType(SlimeType slimeType) {
         return SLIME_TYPE;

@@ -5,10 +5,16 @@ import java.util.Random;
 
 public class PinkSlime extends Slime{
     public static final String PINK_SLIME_IMAGE_NAME = "pinkSlime.png";
+    public static final String PINK_SLIME_NAME = "Pink Slime";
     public PinkSlime(double xPosition, double yPosition, PetriDish petriDish) {
         super(xPosition, yPosition, petriDish);
         //粉色：30-39
         this.setPrice(new Random().nextInt(30,40));
+    }
+
+    @Override
+    protected String setConstantName() {
+        return PINK_SLIME_NAME;
     }
 
     @Override
