@@ -53,7 +53,7 @@ public class BouncingSlimes extends Application {
 
         //Sell button onclick event handler
         sellButton.setOnMouseClicked(event -> {
-            ListView<Slime> slimeListView = createSlimeListView(petriDish, player);
+            ListView<Slime> slimeListView = createSlimeListView(petriDish, player, balanceLabel);
             Stage listStage = new Stage();
             listStage.setTitle("Slime List");
             Image icon = new Image("pinkSlime.png");
@@ -167,7 +167,7 @@ public class BouncingSlimes extends Application {
         return balanceLabel;
     }
 
-    private ListView<Slime> createSlimeListView(PetriDish petriDish, Player player) {
+    private ListView<Slime> createSlimeListView(PetriDish petriDish, Player player, Label balanceLabel) {
         ListView<Slime> slimeListView = new ListView<>(FXCollections.observableArrayList(petriDish.getSlimesList()));
         slimeListView.setCellFactory(lv -> new ListCell<Slime>() {
             @Override
@@ -187,7 +187,7 @@ public class BouncingSlimes extends Application {
 
                     Button button = new Button("Sell");
                     button.setOnAction(e -> {
-                        addEventToSingleSellButton(button, slime, petriDish, player);
+                        addEventToSingleSellButton(button, slime, petriDish, player, balanceLabel, slimeListView);
                     });
                     hbox.getChildren().addAll(button, slimeCategory);
 
@@ -203,11 +203,15 @@ public class BouncingSlimes extends Application {
         return slimeListView;
     }
 
-    private void addEventToSingleSellButton(Button btn, Slime slime, PetriDish petriDish, Player player) {
+    private void addEventToSingleSellButton(Button btn, Slime slime, PetriDish petriDish,
+                                            Player player, Label balanceLabel, ListView<Slime> listView) {
         btn.setOnMouseClicked(mouseEvent -> {
             petriDish.removeSlime(slime);
             petriDish.getCanvas().getChildren().remove(slime.imageView);
             player.increaseBalance(slime.getPrice());
+            System.out.println(player.getBalance());
+            balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
+            listView.setItems(FXCollections.observableArrayList(petriDish.getSlimesList()));
 
 
         });
