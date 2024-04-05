@@ -9,38 +9,55 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import java.util.Random;
-
+/**
+ * Abstract representation of Slime.
+ *
+ * @author Kim Zhang Github:yuezhang27
+ * @author Caroline Su Github: Juntingg
+ * @version 1.0
+ */
 public abstract class Slime extends Circle implements Runnable {
 
+    /**
+     * The initial radius of a Slime object.
+     */
+    public static final int INITIAL_RADIUS = 10;
+    /**
+     * The initial size of a Slime object.
+     */
+    public static final int INITIAL_SIZE = 1;
     private static final int MAX_X = 425; // horizontal edge of enclosing Panel
     private static final int MAX_Y = 475; // vertical edge of enclosing Panel
     private static final int MIN_X = 25; // horizontal edge of enclosing Panel
     private static final int MIN_Y = 75; // vertical edge of enclosing Panel
-    public static final int INITIAL_RADIUS = 10;
-//    public static final int INITIAL_RADIUS = 10;
-    public static final int INITIAL_SIZE = 1;
+    private static final Random GENERATOR = new Random();
+    private static int totalNumberOfSlime;
+    /**
+     * The ImageView for slime's image.
+     */
+    protected ImageView imageView;
+    /**
+     * The instance of slime-specific behaviors.
+     */
+    protected SlimeBehavioralImplementation slimeBehavior;
     private int size = INITIAL_SIZE;
     private String slimeImage;
     private double xVelocity;
     private double yVelocity;
     private int price;
-    private final String NAME;
-    public static int totalNumberOfSlime;
+    private final String slimeNAME;
     private final int slimeId;
     private boolean isAlive;
     private Thread thread;
     private final PetriDish petriDish;
     private boolean running = true;
-    private static final Random GENERATOR = new Random();
-    protected ImageView imageView;
-    protected SlimeBehavioralImplementation slimeBehavior;
 
 
     public Slime(final double xPosition, final double yPosition, PetriDish petriDish) {
         super(INITIAL_RADIUS, Color.TRANSPARENT);
         totalNumberOfSlime++;
         this.slimeId = totalNumberOfSlime;
-        this.NAME = setConstantName();
+        this.slimeNAME = setConstantName();
         this.setSlimeImage(getConstantSlimeImageName());
         this.setCenterX(xPosition);
         this.setCenterY(yPosition);
@@ -65,7 +82,7 @@ public abstract class Slime extends Circle implements Runnable {
     public int getSlimeId() {
         return slimeId;
     }
-    public String getName() {return this.NAME;}
+    public String getName() {return this.slimeNAME;}
 
 // getters
 
