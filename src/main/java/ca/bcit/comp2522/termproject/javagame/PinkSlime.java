@@ -24,26 +24,6 @@ public class PinkSlime extends Slime{
 
 
     @Override
-    protected void moveSlime(Slime slime) {
-
-    }
-
-    @Override
-    protected ArrayList<Slime> splitSlime(Slime slime) {
-        return null;
-    }
-
-    @Override
-    protected boolean checkIsCollide() {
-        return false;
-    }
-
-    @Override
-    protected Slime slimeMutation() {
-        return null;
-    }
-
-    @Override
     protected String getConstantSlimeImageName() {
         return PINK_SLIME_IMAGE_NAME;
     }

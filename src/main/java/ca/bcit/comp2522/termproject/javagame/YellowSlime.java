@@ -33,25 +33,6 @@ public class YellowSlime extends Slime{
         return SLIME_TYPE;
     }
 
-    @Override
-    protected void moveSlime(Slime slime) {
-
-    }
-
-    @Override
-    protected ArrayList<Slime> splitSlime(Slime slime) {
-        return null;
-    }
-
-    @Override
-    protected boolean checkIsCollide() {
-        return false;
-    }
-
-    @Override
-    protected Slime slimeMutation() {
-        return null;
-    }
 
     @Override
     protected String getConstantSlimeImageName() {

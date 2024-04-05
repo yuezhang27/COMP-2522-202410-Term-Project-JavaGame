@@ -22,25 +22,6 @@ public class PurpleSlime extends Slime {
     }
 
 
-    @Override
-    protected void moveSlime(Slime slime) {
-
-    }
-
-    @Override
-    protected ArrayList<Slime> splitSlime(Slime slime) {
-        return null;
-    }
-
-    @Override
-    protected boolean checkIsCollide() {
-        return false;
-    }
-
-    @Override
-    protected Slime slimeMutation() {
-        return null;
-    }
     protected String getConstantSlimeImageName() {
         return PURPLE_SLIME_IMAGE_NAME;
     }
