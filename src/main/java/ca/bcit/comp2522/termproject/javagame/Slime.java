@@ -12,8 +12,8 @@ import java.util.Random;
 /**
  * Abstract representation of Slime.
  *
+ *  @author Caroline Su Github: Juntingg
  * @author Kim Zhang Github:yuezhang27
- * @author Caroline Su Github: Juntingg
  * @version 1.0
  */
 public abstract class Slime extends Circle implements Runnable {
@@ -53,7 +53,14 @@ public abstract class Slime extends Circle implements Runnable {
     private boolean running = true;
 
 
-    public Slime(final double xPosition, final double yPosition, PetriDish petriDish) {
+    /**
+     * Constructs a Slime object with specified position and petri dish.
+     *
+     * @param xPosition  the initial X position of the slime
+     * @param yPosition  the initial Y position of the slime
+     * @param petriDish  the Petri dish of the slime
+     */
+    public Slime(final double xPosition, final double yPosition, final PetriDish petriDish) {
         super(INITIAL_RADIUS, Color.TRANSPARENT);
         totalNumberOfSlime++;
         this.slimeId = totalNumberOfSlime;
@@ -68,32 +75,59 @@ public abstract class Slime extends Circle implements Runnable {
         Image image = new Image(getConstantSlimeImageName()); // 替换为实际图片路径
         imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        imageView.setFitHeight(getRadius() * 2); // 根据Slime大小调整图片大小
+        //image size match slime size
+        imageView.setFitHeight(getRadius() * 2);
         imageView.setFitWidth(getRadius() * 2);
-
-//         确保图片与Slime的中心对齐
+        //slime's centre same with image centre
         imageView.setX(getCenterX() - getRadius());
         imageView.setY(getCenterY() - getRadius());
     }
-
+    /**
+     * Gets the size of the slime.
+     *
+     * @return the size of this slime
+     */
     public int getSize() {
         return this.size;
     }
+    /**
+     * Gets the ID of the slime.
+     *
+     * @return the slime's ID
+     */
     public int getSlimeId() {
         return slimeId;
     }
-    public String getName() {return this.slimeNAME;}
+    /**
+     * Gets the name of the slime.
+     *
+     * @return the name of this slime
+     */
+    public String getName() {
+        return this.slimeNAME;
+    }
 
-// getters
-
+    /**
+     * Gets the x velocity of the slime.
+     *
+     * @return the x velocity of this slime
+     */
     public double getXVelocity() {
         return this.xVelocity;
     }
-
+    /**
+     * Gets the alive status of the slime.
+     *
+     * @return boolean value representing this slime's living status
+     */
     public boolean getIsAlive() {
         return this.isAlive;
     }
-
+    /**
+     * Gets the image of the slime.
+     *
+     * @return the image of this slime
+     */
     public ImageView getImageView() {
         return this.imageView;
     }
