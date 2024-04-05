@@ -57,6 +57,7 @@ public class BouncingSlimes extends Application {
         primaryStage.getIcons().add(new Image("pinkSlime.png"));
         primaryStage.setTitle("Threads and Balls");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
 //        add a default slime to start the game
         addDefaultSlime();
