@@ -1,15 +1,14 @@
 package ca.bcit.comp2522.termproject.javagame;
 
 import javafx.scene.layout.Pane;
+
 import java.util.ArrayList;
 import java.util.Currency;
 
 public class PetriDish {
-    private final ArrayList<Slime> slimesList ;
+    public static final String PETRI_DISH_IMAGE = "regularPetriDish.png";
+    private final ArrayList<Slime> slimesList;
     private final ArrayList<Thread> threadList;
-    private double mutationProbability;
-    private double growSpeed;
-    private int petriDishPrice;
     private int petriDishLevel;
     private boolean isStopThread = false;
     private final Pane canvas = new Pane();
@@ -18,9 +17,6 @@ public class PetriDish {
     public PetriDish() {
         this.slimesList = new ArrayList<>();
         this.threadList = new ArrayList<>();
-        this.mutationProbability = 0.1;
-        this.growSpeed = 1.0;
-        this.petriDishPrice = 10;
         this.petriDishLevel = 1;
     }
 
@@ -29,9 +25,7 @@ public class PetriDish {
             return false;
         }
         player.reduceBalance(cost);
-        this.petriDishLevel +=1;
-        this.growSpeed += 0.5;
-        this.mutationProbability += 0.2;
+        this.petriDishLevel += 1;
         return true;
 
     }
@@ -43,7 +37,7 @@ public class PetriDish {
         }
     }
 
-    public void removeSlime(Slime slime){
+    public void removeSlime(Slime slime) {
         if (slime != null && !this.slimesList.isEmpty()) {
             slime.stopThread();
             this.slimesList.remove(slime);
@@ -51,6 +45,7 @@ public class PetriDish {
 //            this.getCanvas().getChildren().remove(slime.getImageView());
         }
     }
+
     public void checkSlimeCountAndKill() {
         if (slimesList.size() > 10) {
             int count = slimesList.size() - 10;
@@ -62,51 +57,23 @@ public class PetriDish {
         }
     }
 
-
-    //getters
-    public double getMutationProbability() {
-        return this.mutationProbability;
-    }
-
-    public double getGrowSpeed() {
-        return this.growSpeed;
-    }
-
-    public int getPetriDishPrice() {
-        return this.petriDishPrice;
-    }
-
-    public int getPetriDishLevel() {
-        return this.petriDishLevel;
-    }
     public ArrayList<Slime> getSlimesList() {
         return slimesList;
     }
 
     //setters
-    public void setMutationProbability(double newMutationProbability) {
-        this.mutationProbability = newMutationProbability;
-    }
-
     public void setStopThread(boolean newStopThread) {
         this.isStopThread = newStopThread;
     }
 
-    public void setGrowSpeed(double newGrowSpeed) {
-        this.growSpeed = newGrowSpeed;
-    }
-
-    public void setPetriDishPrice(int newPetriDishPrice) {
-        this.petriDishPrice = newPetriDishPrice;
-    }
-
-    public void setPetriDishLevel(int newPetriDishLevel) {
-        this.petriDishLevel = newPetriDishLevel;
-    }
-    public Pane getCanvas(){
+    public Pane getCanvas() {
         return this.canvas;
     }
-    public boolean getIsStopThread(){return this.isStopThread;}
+
+    public boolean getIsStopThread() {
+        return this.isStopThread;
+    }
+
     public void addThread(Thread thread) {
         threadList.add(thread);
     }

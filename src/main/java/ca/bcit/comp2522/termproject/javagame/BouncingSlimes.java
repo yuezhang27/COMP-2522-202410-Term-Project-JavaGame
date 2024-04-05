@@ -1,7 +1,5 @@
 package ca.bcit.comp2522.termproject.javagame;
 
-
-import javafx.animation.*;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
@@ -12,10 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.animation.Timeline;
 
-import java.util.ArrayList;
 
 /**
  * BouncingBalls, an introduction to threading and JavaFX.
@@ -25,6 +20,28 @@ import java.util.ArrayList;
  * @version 2022
  */
 public class BouncingSlimes extends Application {
+    public static final int WINDOW_SIZE_X = 500;
+    public static final int WINDOW_SIZE_Y = 500;
+    public static final int SELL_WINDOW_SIZE_X = 300;
+    public static final int SELL_WINDOW_SIZE_Y = 300;
+    public static final int SELL_BTN_ICON_WIDTH = 25;
+    public static final int SELL_BTN_ICON_HEIGHT = 25;
+    public static final int SELL_BTN_ICON_X_COORDINATE = 25;
+    public static final int SELL_BTN_ICON_Y_COORDINATE = 10;
+    private static final int BUTTON_WIDTH = 120;
+    private static final int BUTTON_HEIGHT = 200;
+    private static final int MOUSE_ENTER_WIDTH_INCREMENT = 10;
+    private static final int BUTTON_LAYOUT_X = 370;
+    private static final int BUTTON_LAYOUT_Y = 420;
+    private static final int INITIAL_LAYOUT_X = 280;
+    private static final int INITIAL_LAYOUT_Y = 10;
+    private static final int SLIME_CATEGORY_SIZE = 10;
+    final double DEFAULT_SLIME_INITIAL_X = 250;
+    final double DEFAULT_SLIME_INITIAL_Y = 250;
+    private PetriDish petriDish;
+    private Player player;
+    private Label balanceLabel;
+    private ProgressBarManager progressBarManager;
 
 
     /**
@@ -33,81 +50,63 @@ public class BouncingSlimes extends Application {
      * @param primaryStage contains the Scene
      */
     public void start(final Stage primaryStage) {
-//        set up canvas
-        PetriDish petriDish = new PetriDish();
-        Pane petriDishCanvas = setupCanvas(petriDish);
-        StackPane rootPane = new StackPane();
-        Scene scene = new Scene(rootPane, 500, 500);
+        initializeGame();
+        Scene scene = createScene();
         scene.getStylesheets().add("style.css");
 
-        Button sellButton = createSellBtn();
-
-        //HARD CODE BALANCE FOR 500 FOR NOW!!
-        Player player = new Player();
-        Label balanceLabel = createBalanceLabel(player);
-        petriDishCanvas.getChildren().add(balanceLabel);
-
-//create a second pane for buttons
-        Pane buttonCanvas = new Pane();
-        buttonCanvas.setPrefSize(500, 500);
-
-        //Sell button onclick event handler
-        sellButton.setOnMouseClicked(event -> {
-            ListView<Slime> slimeListView = createSlimeListView(petriDish, player, balanceLabel);
-            Stage listStage = new Stage();
-            listStage.setTitle("Slime List");
-            Image icon = new Image("pinkSlime.png");
-            listStage.getIcons().add(icon);
-
-            Scene listScene = new Scene(new StackPane(slimeListView), 300, 300);
-            listStage.setScene(listScene);
-            listStage.show();
-
-
-//            buttonCanvas.getChildren().addFirst(slimeListView);
-//
-//            // AVOID REPETITION
-//            buttonCanvas.getChildren().removeIf(node -> node instanceof ListView);
-//            buttonCanvas.getChildren().add(slimeListView);
-        });
-
-        buttonCanvas.getChildren().add(sellButton);
-
-
-        ProgressBar progressBar = createVerticalProgressBar();
-
-
-        Timeline timeline = createNewTimeline(progressBar);
-        addActionToProgressBar(timeline, progressBar, petriDish);
-        petriDishCanvas.getChildren().add(progressBar);
-
-        ImageView soupBtn = createSoupBtn(player, balanceLabel, progressBar, timeline);
-        buttonCanvas.getChildren().add(soupBtn);
-
-        rootPane.getChildren().add(petriDishCanvas);
-        rootPane.getChildren().add(buttonCanvas);
-
-
-
-        Image icon = new Image("pinkSlime.png");
-        primaryStage.getIcons().add(icon);
+        primaryStage.getIcons().add(new Image("pinkSlime.png"));
         primaryStage.setTitle("Threads and Balls");
         primaryStage.setScene(scene);
         primaryStage.show();
-
 //        add a default slime to start the game
-        addDefaultSlime(petriDishCanvas, petriDish);
-
+        addDefaultSlime();
     }
 
+    private void initializeGame() {
+        petriDish = new PetriDish();
+        player = new Player();
+        balanceLabel = createBalanceLabel();
+        progressBarManager = new ProgressBarManager(petriDish);
+    }
 
+    private Scene createScene() {
+        StackPane rootPane = new StackPane();
+        Pane petriDishCanvas = setupCanvas();
+        Pane buttonCanvas = createButtonCanvas();
+        rootPane.getChildren().addAll(petriDishCanvas, buttonCanvas);
+        return new Scene(rootPane, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+    }
 
-    private Pane setupCanvas(PetriDish petriDish) {
-        Image backgroundImg = new Image("regularPetriDish.png");
-        ImageView imageView = new ImageView(backgroundImg);
+    private Pane setupCanvas() {
         Pane canvas = petriDish.getCanvas();
+        ImageView imageView = new ImageView(new Image(PetriDish.PETRI_DISH_IMAGE));
         canvas.getChildren().add(imageView);
+        ProgressBar progressBar = progressBarManager.getProgressBar();
+        canvas.getChildren().addAll(balanceLabel, progressBar);
         return canvas;
+    }
+
+    private Pane createButtonCanvas() {
+        Pane buttonCanvas = new Pane();
+        buttonCanvas.setPrefSize(WINDOW_SIZE_X, WINDOW_SIZE_Y);
+        Button sellButton = createSellBtn();
+        sellButton.setOnMouseClicked(mouseEvent -> openSlimeListView());
+        ImageView soupButton = createSoupBtn();
+        soupButton.setOnMouseClicked(mouseEvent -> reduceBalanceAddSoup());
+        buttonCanvas.getChildren().addAll(sellButton, soupButton);
+        return buttonCanvas;
+    }
+
+    private void openSlimeListView() {
+        ListView<Slime> slimeListView = createSlimeListView();
+        Stage listStage = new Stage();
+        listStage.setTitle("Slime List");
+        Image icon = new Image("purpleSlime.png");
+        listStage.getIcons().add(icon);
+
+        Scene listScene = new Scene(new StackPane(slimeListView), SELL_WINDOW_SIZE_X, SELL_WINDOW_SIZE_Y);
+        listStage.setScene(listScene);
+        listStage.show();
     }
 
     private Button createSellBtn() {
@@ -118,56 +117,55 @@ public class BouncingSlimes extends Application {
         ImageView sellImageView = new ImageView(sellButtonImage);
         sellButton.setGraphic(sellImageView);
 
-        sellImageView.setFitHeight(25);  //Button height
-        sellImageView.setFitWidth(25);   // Buttin width
+        sellImageView.setFitHeight(SELL_BTN_ICON_HEIGHT);  //Button height
+        sellImageView.setFitWidth(SELL_BTN_ICON_WIDTH);   // Button width
         sellImageView.setPreserveRatio(true);
 
         //Coordination of sell button
-        sellButton.setLayoutX(25);
-        sellButton.setLayoutY(10);
+        sellButton.setLayoutX(SELL_BTN_ICON_X_COORDINATE);
+        sellButton.setLayoutY(SELL_BTN_ICON_Y_COORDINATE);
+        sellButton.setOnMouseClicked(event -> createSlimeListView());
         return sellButton;
     }
 
-    private ImageView createSoupBtn(Player player, Label balanceLabel, ProgressBar progressBar, Timeline timeline) {
+    private ImageView createSoupBtn() {
         Image image = new Image("soup_btn.png");
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(120);
+        imageView.setFitWidth(BUTTON_WIDTH);
+        imageView.setFitHeight(BUTTON_HEIGHT);
         imageView.setPreserveRatio(true);
-        imageView.setFitHeight(200);
-        imageView.setLayoutX(370);
-        imageView.setLayoutY(420);
 
-        imageView.setOnMouseClicked(mouseEvent -> {
-            if (player.reduceBalance(1)) {
-                updateTimeline(timeline, progressBar, 0.25, 40);
-                balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
+        imageView.setLayoutX(BUTTON_LAYOUT_X);
+        imageView.setLayoutY(BUTTON_LAYOUT_Y);
 
-            }
-
-        });
         imageView.setOnMouseEntered(mouseEvent -> {
-            imageView.setFitWidth(130);
+            imageView.setFitWidth(BUTTON_WIDTH+MOUSE_ENTER_WIDTH_INCREMENT);
             imageView.setPreserveRatio(true);
-
         });
         imageView.setOnMouseExited(mouseEvent -> {
-            imageView.setFitWidth(120);
+            imageView.setFitWidth(BUTTON_WIDTH);
             imageView.setPreserveRatio(true);
         });
-
         return imageView;
     }
 
-    private Label createBalanceLabel(Player player) {
+    private void reduceBalanceAddSoup(){
+        if (player.reduceBalance(1)) {
+            progressBarManager.updateTimeline(0.25, 40);
+            balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
+        }
+    }
+
+    private Label createBalanceLabel() {
         Label balanceLabel = new Label("\uD83D\uDCB0Balance $: " + player.getBalance());
-        balanceLabel.setLayoutX(280);
-        balanceLabel.setLayoutY(10);
+        balanceLabel.setLayoutX(INITIAL_LAYOUT_X);
+        balanceLabel.setLayoutY(INITIAL_LAYOUT_Y);
         balanceLabel.getStyleClass().add("balance-label");
         balanceLabel.setFont(Font.font("Segoe UI Emoji"));
         return balanceLabel;
     }
 
-    private ListView<Slime> createSlimeListView(PetriDish petriDish, Player player, Label balanceLabel) {
+    private ListView<Slime> createSlimeListView() {
         ListView<Slime> slimeListView = new ListView<>(FXCollections.observableArrayList(petriDish.getSlimesList()));
         slimeListView.setCellFactory(lv -> new ListCell<Slime>() {
             @Override
@@ -182,102 +180,36 @@ public class BouncingSlimes extends Application {
                     hbox.setAlignment(Pos.CENTER_RIGHT);
 
                     ImageView slimeCategory = new ImageView(slime.getSlimeImage());
-                    slimeCategory.setFitWidth(10);
-                    slimeCategory.setFitHeight(10);
+                    slimeCategory.setFitWidth(SLIME_CATEGORY_SIZE);
+                    slimeCategory.setFitHeight(SLIME_CATEGORY_SIZE);
 
                     Button button = new Button("Sell");
                     button.setOnAction(e -> {
-                        addEventToSingleSellButton(button, slime, petriDish, player, balanceLabel, slimeListView);
+                        addEventToSingleSellButton(slime, slimeListView);
                     });
                     hbox.getChildren().addAll(button, slimeCategory);
-
-
                     setGraphic(hbox);
                 }
             }
         });
-        // Coordination X, Y of the Listview (Slime list)
-        slimeListView.setLayoutX(50);
-        slimeListView.setLayoutY(100);
-        slimeListView.setPrefSize(200, 300);
         return slimeListView;
     }
 
-    private void addEventToSingleSellButton(Button btn, Slime slime, PetriDish petriDish,
-                                            Player player, Label balanceLabel, ListView<Slime> listView) {
-        btn.setOnMouseClicked(mouseEvent -> {
+    private void addEventToSingleSellButton(Slime slime, ListView<Slime> listView) {
             petriDish.removeSlime(slime);
             petriDish.getCanvas().getChildren().remove(slime.imageView);
             player.increaseBalance(slime.getPrice());
             System.out.println(player.getBalance());
             balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
             listView.setItems(FXCollections.observableArrayList(petriDish.getSlimesList()));
-
-
-        });
     }
-    private void addDefaultSlime(Pane canvas, PetriDish petriDish) {
-        Slime defaultSlime = new YellowSlime(250, 250, petriDish);
-        defaultSlime.addToPane(canvas);
+
+    private void addDefaultSlime() {
+        Slime defaultSlime = new YellowSlime(DEFAULT_SLIME_INITIAL_X, DEFAULT_SLIME_INITIAL_Y, petriDish);
+        defaultSlime.addToPane(petriDish.getCanvas());
         defaultSlime.startThread();
     }
 
-    private ProgressBar createVerticalProgressBar() {
-        ProgressBar progressBar = new ProgressBar();
-        progressBar.getStyleClass().add("vertical-progress-bar");
-        progressBar.setPrefSize(400, 25);
-        progressBar.setLayoutX(280);
-        progressBar.setLayoutY(200);
-        return progressBar;
-    }
-
-    private Timeline createNewTimeline(ProgressBar progressBar) {
-        return new Timeline(
-                new KeyFrame(Duration.seconds(20), new KeyValue(progressBar.progressProperty(), 0)),
-                new KeyFrame(Duration.seconds(0), e-> {
-//                    start from 1
-                }, new KeyValue(progressBar.progressProperty(), 1))
-        );
-
-    }
-
-    private void updateTimeline(Timeline timeline, ProgressBar progressBar, double increasedPercentage, double totalTime) {
-        double remainingProgressBar = progressBar.getProgress(); //0.8
-        if (remainingProgressBar + increasedPercentage > 1) {
-            increasedPercentage = 1 - remainingProgressBar;
-        }
-
-        double newProgressBarPercentage = increasedPercentage + remainingProgressBar;
-        System.out.println("newProgressBarPercentage" + newProgressBarPercentage);
-
-        double currentDuration = totalTime * newProgressBarPercentage;
-        System.out.println("currentDuration" + currentDuration);
-
-        timeline.stop();
-
-        timeline.getKeyFrames().setAll(
-                new KeyFrame(Duration.seconds(currentDuration),
-                        new KeyValue(progressBar.progressProperty(), 0)),
-                new KeyFrame(Duration.seconds(0), e-> {
-                }, new KeyValue(progressBar.progressProperty(), newProgressBarPercentage))
-                );
-
-        timeline.play();
-    }
-    private void addActionToProgressBar(Timeline timeline, ProgressBar progressBar, PetriDish petriDish){
-        timeline.setCycleCount(1);
-        timeline.play();
-        progressBar.progressProperty().addListener(((observableValue, number, newValue) -> {
-            if (newValue.doubleValue() == 0) {
-                timeline.stop();
-                gameEnd(petriDish);
-            }
-        } ));
-    }
-    void gameEnd(PetriDish petriDish){
-        petriDish.setStopThread(true);
-
-    }
 
     /**
      * Launches the JavaFX application.  We still need a main method in our
