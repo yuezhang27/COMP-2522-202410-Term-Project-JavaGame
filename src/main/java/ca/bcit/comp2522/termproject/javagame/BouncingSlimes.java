@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.Timeline;
 
+import java.util.ArrayList;
 
 /**
  * BouncingBalls, an introduction to threading and JavaFX.
@@ -52,7 +53,7 @@ public class BouncingSlimes extends Application {
 
         //Sell button onclick event handler
         sellButton.setOnMouseClicked(event -> {
-            ListView<Slime> slimeListView = createSlimeListView(petriDish);
+            ListView<Slime> slimeListView = createSlimeListView(petriDish, player);
             Stage listStage = new Stage();
             listStage.setTitle("Slime List");
             Image icon = new Image("pinkSlime.png");
@@ -61,6 +62,8 @@ public class BouncingSlimes extends Application {
             Scene listScene = new Scene(new StackPane(slimeListView), 300, 300);
             listStage.setScene(listScene);
             listStage.show();
+
+
 //            buttonCanvas.getChildren().addFirst(slimeListView);
 //
 //            // AVOID REPETITION
@@ -96,6 +99,8 @@ public class BouncingSlimes extends Application {
         addDefaultSlime(petriDishCanvas, petriDish);
 
     }
+
+
 
     private Pane setupCanvas(PetriDish petriDish) {
         Image backgroundImg = new Image("regularPetriDish.png");
@@ -162,7 +167,7 @@ public class BouncingSlimes extends Application {
         return balanceLabel;
     }
 
-    private ListView<Slime> createSlimeListView(PetriDish petriDish) {
+    private ListView<Slime> createSlimeListView(PetriDish petriDish, Player player) {
         ListView<Slime> slimeListView = new ListView<>(FXCollections.observableArrayList(petriDish.getSlimesList()));
         slimeListView.setCellFactory(lv -> new ListCell<Slime>() {
             @Override
@@ -182,7 +187,7 @@ public class BouncingSlimes extends Application {
 
                     Button button = new Button("Sell");
                     button.setOnAction(e -> {
-//                        addEventToSellButton(button);
+                        addEventToSingleSellButton(button, slime, petriDish, player);
                     });
                     hbox.getChildren().addAll(button, slimeCategory);
 
@@ -198,7 +203,15 @@ public class BouncingSlimes extends Application {
         return slimeListView;
     }
 
+    private void addEventToSingleSellButton(Button btn, Slime slime, PetriDish petriDish, Player player) {
+        btn.setOnMouseClicked(mouseEvent -> {
+            petriDish.removeSlime(slime);
+            petriDish.getCanvas().getChildren().remove(slime.imageView);
+            player.increaseBalance(slime.getPrice());
 
+
+        });
+    }
     private void addDefaultSlime(Pane canvas, PetriDish petriDish) {
         Slime defaultSlime = new YellowSlime(250, 250, petriDish);
         defaultSlime.addToPane(canvas);
@@ -226,7 +239,6 @@ public class BouncingSlimes extends Application {
 
     private void updateTimeline(Timeline timeline, ProgressBar progressBar, double increasedPercentage, double totalTime) {
         double remainingProgressBar = progressBar.getProgress(); //0.8
-        double timeOver = timeline.getCurrentTime().toSeconds();
         if (remainingProgressBar + increasedPercentage > 1) {
             increasedPercentage = 1 - remainingProgressBar;
         }
@@ -236,8 +248,6 @@ public class BouncingSlimes extends Application {
 
         double currentDuration = totalTime * newProgressBarPercentage;
         System.out.println("currentDuration" + currentDuration);
-
-
 
         timeline.stop();
 
@@ -249,7 +259,6 @@ public class BouncingSlimes extends Application {
                 );
 
         timeline.play();
-
     }
     private void addActionToProgressBar(Timeline timeline, ProgressBar progressBar, PetriDish petriDish){
         timeline.setCycleCount(1);
@@ -262,7 +271,7 @@ public class BouncingSlimes extends Application {
         } ));
     }
     void gameEnd(PetriDish petriDish){
-        petriDish.setStopThread(false);
+        petriDish.setStopThread(true);
 
     }
 

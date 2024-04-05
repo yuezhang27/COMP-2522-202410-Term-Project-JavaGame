@@ -5,15 +5,13 @@ import java.util.ArrayList;
 import java.util.Currency;
 
 public class PetriDish {
-
-
     private final ArrayList<Slime> slimesList ;
     private final ArrayList<Thread> threadList;
     private double mutationProbability;
     private double growSpeed;
     private int petriDishPrice;
     private int petriDishLevel;
-    private boolean isStopThread = true;
+    private boolean isStopThread = false;
     private final Pane canvas = new Pane();
 
 
@@ -47,6 +45,7 @@ public class PetriDish {
 
     public void removeSlime(Slime slime){
         if (slime != null && !this.slimesList.isEmpty()) {
+            slime.stopThread();
             this.slimesList.remove(slime);
             this.threadList.remove(slime.getThread());
 //            this.getCanvas().getChildren().remove(slime.getImageView());

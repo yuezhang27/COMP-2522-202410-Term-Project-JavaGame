@@ -167,7 +167,7 @@ public abstract class Slime extends Circle implements Runnable {
      * Bounces the Ball perpetually.
      */
     public void run() {
-        while (running && petriDish.getIsStopThread()) {
+        while (running && !petriDish.getIsStopThread()) {
             try {
                 Thread.sleep(20);
             } catch (InterruptedException exception) {
