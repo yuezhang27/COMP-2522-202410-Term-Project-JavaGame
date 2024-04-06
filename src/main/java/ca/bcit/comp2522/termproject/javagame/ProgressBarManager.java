@@ -3,24 +3,35 @@ package ca.bcit.comp2522.termproject.javagame;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
+
+import java.util.ArrayList;
 
 public class ProgressBarManager {
 
     private final ProgressBar progressBar;
     private final Timeline timeline;
     private final PetriDish petriDish;
-    public ProgressBarManager(PetriDish petriDish){
+    private final Pane buttonCanvas;
+
+    public ProgressBarManager(PetriDish petriDish, Pane buttonCanvas) {
         this.progressBar = createVerticalProgressBar();
         this.timeline = createNewTimeline();
         this.petriDish = petriDish;
+        this.buttonCanvas = buttonCanvas;
         addActionToProgressBar();
     }
 
     public ProgressBar getProgressBar() {
         return this.progressBar;
     }
+
     private ProgressBar createVerticalProgressBar() {
         ProgressBar progressBar = new ProgressBar();
         progressBar.getStyleClass().add("vertical-progress-bar");
@@ -29,6 +40,7 @@ public class ProgressBarManager {
         progressBar.setLayoutY(200);
         return progressBar;
     }
+
     private Timeline createNewTimeline() {
         return new Timeline(
                 new KeyFrame(Duration.seconds(20), new KeyValue(progressBar.progressProperty(), 0)),
@@ -76,7 +88,24 @@ public class ProgressBarManager {
     }
 
     void gameEnd(PetriDish petriDish) {
+        ArrayList<Slime> slimeArrayList = petriDish.getSlimesList();
+        for (Slime slime : slimeArrayList) {
+            slime.die();
+        }
+        Slime defaultSlime = petriDish.getDefaultSlime();
+        defaultSlime.die();
+
         petriDish.setStopThread(true);
+        Label gameOverLabel = new Label("Your Slimes All Die!");
+        gameOverLabel.getStyleClass().add("gameOver-label");
+        gameOverLabel.setPrefWidth(BouncingSlimes.WINDOW_SIZE_X);
+        gameOverLabel.setTextAlignment(TextAlignment.CENTER);
+        gameOverLabel.setLayoutY(200);
+
+        Rectangle darkOverlay = new Rectangle(0, 0, buttonCanvas.getWidth(), buttonCanvas.getHeight());
+        darkOverlay.setFill(Color.rgb(0, 0, 0, 0.5));
+        buttonCanvas.getChildren().addAll(darkOverlay, gameOverLabel);
+
 
     }
 
