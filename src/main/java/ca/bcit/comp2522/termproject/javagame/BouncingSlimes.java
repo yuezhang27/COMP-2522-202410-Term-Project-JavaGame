@@ -14,8 +14,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**
@@ -113,17 +116,29 @@ public class BouncingSlimes extends Application {
         petriDish = new PetriDish();
         player = new Player();
         balanceLabel = createBalanceLabel();
-        progressBarManager = new ProgressBarManager(petriDish);
+
     }
 
     private Scene createScene() {
         StackPane rootPane = new StackPane();
-        Pane petriDishCanvas = setupCanvas();
         Pane buttonCanvas = createButtonCanvas();
+        Pane petriDishCanvas = setupCanvas();
         rootPane.getChildren().addAll(petriDishCanvas, buttonCanvas);
         return new Scene(rootPane, WINDOW_SIZE_X, WINDOW_SIZE_Y);
     }
-
+    private Pane createButtonCanvas() {
+        Pane buttonCanvas = new Pane();
+        buttonCanvas.setPrefSize(WINDOW_SIZE_X, WINDOW_SIZE_Y);
+        Button sellButton = createSellBtn();
+        sellButton.setOnMouseClicked(mouseEvent -> openSlimeListView());
+        ImageView soupButton = createSoupBtn();
+        soupButton.setOnMouseClicked(mouseEvent -> reduceBalanceAddSoup());
+        Button clearButton = createClearButton();
+        clearButton.setOnMouseClicked(mouseEvent -> clearDeadSlimes());
+        buttonCanvas.getChildren().addAll(sellButton, soupButton, clearButton);
+        progressBarManager = new ProgressBarManager(petriDish, buttonCanvas);
+        return buttonCanvas;
+    }
     private Pane setupCanvas() {
         Pane canvas = petriDish.getCanvas();
         ImageView imageView = new ImageView(new Image(PetriDish.PETRI_DISH_IMAGE));
@@ -133,16 +148,7 @@ public class BouncingSlimes extends Application {
         return canvas;
     }
 
-    private Pane createButtonCanvas() {
-        Pane buttonCanvas = new Pane();
-        buttonCanvas.setPrefSize(WINDOW_SIZE_X, WINDOW_SIZE_Y);
-        Button sellButton = createSellBtn();
-        sellButton.setOnMouseClicked(mouseEvent -> openSlimeListView());
-        ImageView soupButton = createSoupBtn();
-        soupButton.setOnMouseClicked(mouseEvent -> reduceBalanceAddSoup());
-        buttonCanvas.getChildren().addAll(sellButton, soupButton);
-        return buttonCanvas;
-    }
+
 
     private void openSlimeListView() {
         ListView<Slime> slimeListView = createSlimeListView();
@@ -171,8 +177,19 @@ public class BouncingSlimes extends Application {
         //Coordination of sell button
         sellButton.setLayoutX(SELL_BTN_ICON_X_COORDINATE);
         sellButton.setLayoutY(SELL_BTN_ICON_Y_COORDINATE);
-        sellButton.setOnMouseClicked(event -> createSlimeListView());
         return sellButton;
+    }
+
+    private Button createClearButton() {
+        Button clearButton = new Button("Clear Dead Slimes");
+        clearButton.getStyleClass().add("button-clear");
+        clearButton.setLayoutX(150);
+        clearButton.setLayoutY(14);
+        clearButton.setTextFill(Color.BLACK);
+        petriDish.getCanvas().requestLayout();
+        petriDish.getCanvas().layout();
+        return clearButton;
+
     }
 
     private ImageView createSoupBtn() {
@@ -200,6 +217,17 @@ public class BouncingSlimes extends Application {
         if (player.reduceBalance(1)) {
             progressBarManager.updateTimeline(PROGRESS_BAR_DURATION, PROGRESS_BAR_SIZE);
             balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
+        }
+    }
+
+    private void clearDeadSlimes() {
+        ArrayList<Slime> slimeDeadArrayList = petriDish.getDeadSlimeList();
+        Pane canvas = petriDish.getCanvas();
+        Iterator<Slime> iterator = slimeDeadArrayList.iterator();
+        while (iterator.hasNext()) {
+            Slime slime = iterator.next();
+            canvas.getChildren().remove(slime.getImageView());
+            iterator.remove();
         }
     }
 
@@ -255,6 +283,7 @@ public class BouncingSlimes extends Application {
         Slime defaultSlime = new YellowSlime(DEFAULT_SLIME_INITIAL_X, DEFAULT_SLIME_INITIAL_Y, petriDish);
         defaultSlime.addToPane(petriDish.getCanvas());
         defaultSlime.startThread();
+        petriDish.setDefaultSlime(defaultSlime);
     }
 
 
