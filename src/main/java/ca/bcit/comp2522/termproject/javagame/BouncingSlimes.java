@@ -24,9 +24,9 @@ import java.util.Iterator;
 /**
  * BouncingBalls, an introduction to threading and JavaFX.
  *
- * @author BCIT
- * @author YOUR NAME GOES HERE
- * @version 2022
+ * @author Caroline Su GitHub:Juntingg
+ * @author Kim Zhang GitHub:yuezhang27
+ * @version 2024
  */
 public class BouncingSlimes extends Application {
     /**
@@ -88,6 +88,9 @@ public class BouncingSlimes extends Application {
     private static final int LISTVIEW_ITEM_NUMBER = 10;
     private static final double PROGRESS_BAR_DURATION = 0.25;
     private static final int PROGRESS_BAR_SIZE = 40;
+    private static final int CLEAR_BUTTON_LAYOUT_X = 150;
+    private static final int CLEAR_BUTTON_LAYOUT_Y = 14;
+
     private PetriDish petriDish;
     private Player player;
     private Label balanceLabel;
@@ -183,8 +186,8 @@ public class BouncingSlimes extends Application {
     private Button createClearButton() {
         Button clearButton = new Button("Clear Dead Slimes");
         clearButton.getStyleClass().add("button-clear");
-        clearButton.setLayoutX(150);
-        clearButton.setLayoutY(14);
+        clearButton.setLayoutX(CLEAR_BUTTON_LAYOUT_X);
+        clearButton.setLayoutY(CLEAR_BUTTON_LAYOUT_Y);
         clearButton.setTextFill(Color.BLACK);
         petriDish.getCanvas().requestLayout();
         petriDish.getCanvas().layout();
