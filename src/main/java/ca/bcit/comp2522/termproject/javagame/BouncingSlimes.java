@@ -4,10 +4,16 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -20,14 +26,54 @@ import javafx.stage.Stage;
  * @version 2022
  */
 public class BouncingSlimes extends Application {
+    /**
+     * The width of the main window.
+     */
     public static final int WINDOW_SIZE_X = 500;
+
+    /**
+     * The height of the main window.
+     */
     public static final int WINDOW_SIZE_Y = 500;
+
+    /**
+     * The width of the sell window.
+     */
     public static final int SELL_WINDOW_SIZE_X = 300;
+
+    /**
+     * The height of the sell window.
+     */
     public static final int SELL_WINDOW_SIZE_Y = 300;
+
+    /**
+     * The width of the sell button icon.
+     */
     public static final int SELL_BTN_ICON_WIDTH = 25;
+
+    /**
+     * The height of the sell button icon.
+     */
     public static final int SELL_BTN_ICON_HEIGHT = 25;
+
+    /**
+     * The x-coordinate of the sell button icon.
+     */
     public static final int SELL_BTN_ICON_X_COORDINATE = 25;
+
+    /**
+     * The y-coordinate of the sell button icon.
+     */
     public static final int SELL_BTN_ICON_Y_COORDINATE = 10;
+    /**
+     * The default initial x-coordinate for a slime.
+     */
+    public static final double DEFAULT_SLIME_INITIAL_X = 250;
+
+    /**
+     * The default initial y-coordinate for a slime.
+     */
+    public static final double DEFAULT_SLIME_INITIAL_Y = 250;
     private static final int BUTTON_WIDTH = 120;
     private static final int BUTTON_HEIGHT = 200;
     private static final int MOUSE_ENTER_WIDTH_INCREMENT = 10;
@@ -36,13 +82,13 @@ public class BouncingSlimes extends Application {
     private static final int INITIAL_LAYOUT_X = 280;
     private static final int INITIAL_LAYOUT_Y = 10;
     private static final int SLIME_CATEGORY_SIZE = 10;
-    final double DEFAULT_SLIME_INITIAL_X = 250;
-    final double DEFAULT_SLIME_INITIAL_Y = 250;
+    private static final int LISTVIEW_ITEM_NUMBER = 10;
+    private static final double PROGRESS_BAR_DURATION = 0.25;
+    private static final int PROGRESS_BAR_SIZE = 40;
     private PetriDish petriDish;
     private Player player;
     private Label balanceLabel;
     private ProgressBarManager progressBarManager;
-
 
     /**
      * Demonstrates threading in JavaFX.
@@ -140,7 +186,7 @@ public class BouncingSlimes extends Application {
         imageView.setLayoutY(BUTTON_LAYOUT_Y);
 
         imageView.setOnMouseEntered(mouseEvent -> {
-            imageView.setFitWidth(BUTTON_WIDTH+MOUSE_ENTER_WIDTH_INCREMENT);
+            imageView.setFitWidth(BUTTON_WIDTH + MOUSE_ENTER_WIDTH_INCREMENT);
             imageView.setPreserveRatio(true);
         });
         imageView.setOnMouseExited(mouseEvent -> {
@@ -150,34 +196,34 @@ public class BouncingSlimes extends Application {
         return imageView;
     }
 
-    private void reduceBalanceAddSoup(){
+    private void reduceBalanceAddSoup() {
         if (player.reduceBalance(1)) {
-            progressBarManager.updateTimeline(0.25, 40);
+            progressBarManager.updateTimeline(PROGRESS_BAR_DURATION, PROGRESS_BAR_SIZE);
             balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
         }
     }
 
     private Label createBalanceLabel() {
-        Label balanceLabel = new Label("\uD83D\uDCB0Balance $: " + player.getBalance());
-        balanceLabel.setLayoutX(INITIAL_LAYOUT_X);
-        balanceLabel.setLayoutY(INITIAL_LAYOUT_Y);
-        balanceLabel.getStyleClass().add("balance-label");
-        balanceLabel.setFont(Font.font("Segoe UI Emoji"));
-        return balanceLabel;
+        Label newBalanceLabel = new Label("\uD83D\uDCB0Balance $: " + player.getBalance());
+        newBalanceLabel.setLayoutX(INITIAL_LAYOUT_X);
+        newBalanceLabel.setLayoutY(INITIAL_LAYOUT_Y);
+        newBalanceLabel.getStyleClass().add("balance-label");
+        newBalanceLabel.setFont(Font.font("Segoe UI Emoji"));
+        return newBalanceLabel;
     }
 
     private ListView<Slime> createSlimeListView() {
         ListView<Slime> slimeListView = new ListView<>(FXCollections.observableArrayList(petriDish.getSlimesList()));
-        slimeListView.setCellFactory(lv -> new ListCell<Slime>() {
+        slimeListView.setCellFactory(lv -> new ListCell<>() {
             @Override
-            protected void updateItem(Slime slime, boolean empty) {
+            protected void updateItem(final Slime slime, final boolean empty) {
                 super.updateItem(slime, empty);
                 if (empty || slime == null) {
                     setText(null);
                     setGraphic(null);
                 } else {
                     setText(slime.getName() + slime.getSlimeId() + " - $" + slime.getPrice());
-                    HBox hbox = new HBox(10);
+                    HBox hbox = new HBox(LISTVIEW_ITEM_NUMBER);
                     hbox.setAlignment(Pos.CENTER_RIGHT);
 
                     ImageView slimeCategory = new ImageView(slime.getSlimeImage());
@@ -185,9 +231,9 @@ public class BouncingSlimes extends Application {
                     slimeCategory.setFitHeight(SLIME_CATEGORY_SIZE);
 
                     Button button = new Button("Sell");
-                    button.setOnAction(e -> {
-                        addEventToSingleSellButton(slime, slimeListView);
-                    });
+                    button.setOnAction(e ->
+                            addEventToSingleSellButton(slime, slimeListView)
+                    );
                     hbox.getChildren().addAll(button, slimeCategory);
                     setGraphic(hbox);
                 }
@@ -196,13 +242,13 @@ public class BouncingSlimes extends Application {
         return slimeListView;
     }
 
-    private void addEventToSingleSellButton(Slime slime, ListView<Slime> listView) {
-            petriDish.removeSlime(slime);
-            petriDish.getCanvas().getChildren().remove(slime.imageView);
-            player.increaseBalance(slime.getPrice());
-            System.out.println(player.getBalance());
-            balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
-            listView.setItems(FXCollections.observableArrayList(petriDish.getSlimesList()));
+    private void addEventToSingleSellButton(final Slime slime, final ListView<Slime> listView) {
+        petriDish.removeSlime(slime);
+        petriDish.getCanvas().getChildren().remove(slime.imageView);
+        player.increaseBalance(slime.getPrice());
+        System.out.println(player.getBalance());
+        balanceLabel.setText("\uD83D\uDCB0Balance $: " + player.getBalance());
+        listView.setItems(FXCollections.observableArrayList(petriDish.getSlimesList()));
     }
 
     private void addDefaultSlime() {
