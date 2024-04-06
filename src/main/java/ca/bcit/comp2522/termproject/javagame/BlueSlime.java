@@ -1,48 +1,60 @@
 package ca.bcit.comp2522.termproject.javagame;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-import java.util.ArrayList;
 import java.util.Random;
 
-public class BlueSlime extends Slime{
+/**
+ * BlueSlime class represents a type of Slime with blue color.
+ * It extends the Slime class and provides specific behavior and properties for blue slime.
+ *
+ * @author Caroline Su GitHub:Juntingg
+ * @author Kim Zhang GitHub:yuezhang27
+ * @version 2024
+ */
+public class BlueSlime extends Slime {
+    /**
+     * The image name for blue slime.
+     */
     public static final String BLUE_SLIME_IMAGE_NAME = "blueSlime.png";
+    /**
+     * The name for blue slime.
+     */
     public static final String BLUE_SLIME_NAME = "Blue Slime";
-    public static final SlimeType SLIME_TYPE = SlimeType.BLUE_SLIME;
-    public static final int INITIAL_SIZE = 50;
+    /**
+     * Represents the maximum price that can be assigned to a slime.
+     */
+    public static final int MAX_PRICE = 20;
+    /**
+     * Represents the minimum price that can be assigned to a slime.
+     */
+    public static final int MIN_PRICE = 11;
 
-    public BlueSlime(double xPosition, double yPosition, PetriDish petriDish){
+    /**
+     * Constructs a new BlueSlime object with the specified position and PetriDish.
+     *
+     * @param xPosition the x-coordinate position of the slime
+     * @param yPosition the y-coordinate position of the slime
+     * @param petriDish the PetriDish where the slime belongs
+     */
+    public BlueSlime(final double xPosition, final double yPosition, final PetriDish petriDish) {
         super(xPosition, yPosition, petriDish);
-        //蓝色：11-20价格
-        this.setPrice(new Random().nextInt(11,20));
-
-        // 设置黄色粘液的图片
-        Image image = new Image(BLUE_SLIME_IMAGE_NAME);
-        imageView = new ImageView(image);
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(getRadius() * 2);
-        imageView.setFitWidth(getRadius() * 2);
-
-//         确保图片与Slime的中心对齐
-        imageView.setX(getCenterX() - getRadius());
-        imageView.setY(getCenterY() - getRadius());
-
-        // 将ImageView添加到Slime的父节点中，如果有的话
-//        this.getParent().getChildren().add(imageView);
+        this.setPrice(new Random().nextInt(MIN_PRICE, MAX_PRICE));
     }
 
+    /**
+     * Sets the constant name for the blue slime.
+     *
+     * @return the constant name for the blue slime
+     */
     @Override
     protected String setConstantName() {
         return BLUE_SLIME_NAME;
     }
 
-    @Override
-    protected SlimeType setConstantSlimeType(SlimeType slimeType) {
-        return SLIME_TYPE;
-    }
-
-
+    /**
+     * Gets the constant image name for the blue slime.
+     *
+     * @return the constant image name for the blue slime
+     */
     @Override
     protected String getConstantSlimeImageName() {
         return BLUE_SLIME_IMAGE_NAME;

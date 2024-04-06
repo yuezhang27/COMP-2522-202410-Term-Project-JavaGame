@@ -1,39 +1,57 @@
 package ca.bcit.comp2522.termproject.javagame;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-import java.util.ArrayList;
 import java.util.Random;
 
-public class YellowSlime extends Slime{
+/**
+ * YellowSlime class represents a type of Slime with yellow color.
+ * It extends the Slime class and provides specific behavior and properties for yellow slime.
+ *
+ * @author Caroline Su GitHub:Juntingg
+ * @author Kim Zhang GitHub:yuezhang27
+ * @version 2024
+ */
+public class YellowSlime extends Slime {
+    /**
+     * The image name for yellow slime.
+     */
     public static final String YELLOW_SLIME_IMAGE_NAME = "yellowSlime.png";
+    /**
+     * The name for yellow slime.
+     */
     public static final String YELLOW_SLIME_NAME = "Yellow Slime";
-    public static final SlimeType SLIME_TYPE = SlimeType.YELLOW_SLIME;
-    public static final int INITIAL_SIZE = 50;
+    /**
+     * Represents the maximum price that can be assigned to a slime.
+     */
+    public static final int MAX_PRICE = 10;
 
-    public YellowSlime(double xPosition, double yPosition, PetriDish petriDish){
+    /**
+     * Constructs a new YellowSlime object with the specified position and PetriDish.
+     *
+     * @param xPosition the x-coordinate position of the slime
+     * @param yPosition the y-coordinate position of the slime
+     * @param petriDish the PetriDish where the slime belongs
+     */
+    public YellowSlime(final double xPosition, final double yPosition, final PetriDish petriDish) {
         super(xPosition, yPosition, petriDish);
-        //黄色价格上限：10
-        this.setPrice(new Random().nextInt(10));
-        // 设置黄色粘液的图片
+        this.setPrice(new Random().nextInt(MAX_PRICE));
 
-
-        // 将ImageView添加到Slime的父节点中，如果有的话
-//        this.getParent().getChildren().add(imageView);
     }
 
+    /**
+     * Sets the constant name for the yellow slime.
+     *
+     * @return the constant name for the yellow slime
+     */
     @Override
     protected String setConstantName() {
         return YELLOW_SLIME_NAME;
     }
 
-    @Override
-    protected SlimeType setConstantSlimeType(SlimeType slimeType) {
-        return SLIME_TYPE;
-    }
-
-
+    /**
+     * Gets the constant image name for the yellow slime.
+     *
+     * @return the constant image name for the yellow slime
+     */
     @Override
     protected String getConstantSlimeImageName() {
         return YELLOW_SLIME_IMAGE_NAME;
