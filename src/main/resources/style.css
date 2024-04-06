@@ -5,6 +5,20 @@
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
+
+.button-clear {
+    -fx-background-color: #ffc2c2;
+    -fx-background-radius: 10;
+    -fx-font-size: 12px;
+    -fx-padding: 5px 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #725aa6;
+}
+
+.button-clear:hover {
+    -fx-background-color: #d6bcf7;
+}
+
 .button-sell:hover {
     -fx-background-color: linear-gradient(#c74294, #eb4ba3);
 }
@@ -25,4 +39,11 @@
 .vertical-progress-bar {
     -fx-rotate: -90;
     -fx-accent: #ff7e33;
+}
+
+.gameOver-label {;
+    -fx-text-fill: red;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-font-size: 45px;
 }
