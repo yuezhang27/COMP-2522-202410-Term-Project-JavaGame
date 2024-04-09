@@ -35,9 +35,19 @@ public class BlueSlime extends Slime {
      * @param yPosition the y-coordinate position of the slime
      * @param petriDish the PetriDish where the slime belongs
      */
-    public BlueSlime(final double xPosition, final double yPosition, final PetriDish petriDish) {
-        super(xPosition, yPosition, petriDish);
+    public BlueSlime(final double xPosition, final double yPosition, final PetriDish petriDish, final boolean isTest) {
+        super(xPosition, yPosition, petriDish, isTest);
         this.setPrice(new Random().nextInt(MIN_PRICE, MAX_PRICE));
+    }
+    /**
+     * Constructs a new BlueSlime object with the specified position and PetriDish.
+     *
+     * @param xPosition the x-coordinate position of the slime
+     * @param yPosition the y-coordinate position of the slime
+     * @param petriDish the PetriDish where the slime belongs
+     */
+    public BlueSlime(final double xPosition, final double yPosition, final PetriDish petriDish) {
+        this(xPosition, yPosition, petriDish, false);
     }
 
     /**

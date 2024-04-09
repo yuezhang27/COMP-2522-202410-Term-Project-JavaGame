@@ -54,9 +54,11 @@ public abstract class Slime extends Circle implements Runnable {
     private String slimeImage;
     private double xVelocity;
     private double yVelocity;
+    private boolean isTest;
     private int price;
     private final String slimeNAME;
     private final int slimeId;
+
     private boolean isAlive;
     private Thread thread;
     private final PetriDish petriDish;
@@ -70,7 +72,7 @@ public abstract class Slime extends Circle implements Runnable {
      * @param yPosition the initial Y position of the slime
      * @param petriDish the Petri dish of the slime
      */
-    public Slime(final double xPosition, final double yPosition, final PetriDish petriDish) {
+    public Slime(final double xPosition, final double yPosition, final PetriDish petriDish, final boolean isTest) {
         super(INITIAL_RADIUS, Color.TRANSPARENT);
         totalNumberOfSlime++;
         this.slimeId = totalNumberOfSlime;
@@ -82,15 +84,29 @@ public abstract class Slime extends Circle implements Runnable {
         this.slimeBehavior = new SlimeBehavioralImplementation();
         xVelocity = GENERATOR.nextInt(1, MAX_VELOCITY); // change in x (0 - 4 pixels)
         yVelocity = GENERATOR.nextInt(1, MAX_VELOCITY); // change in y (0 - 4 pixels)
-        Image image = new Image(getConstantSlimeImageName());
-        imageView = new ImageView(image);
-        imageView.setPreserveRatio(true);
-        //image size match slime size
-        imageView.setFitHeight(getRadius() * 2);
-        imageView.setFitWidth(getRadius() * 2);
-        //slime's centre same with image centre
-        imageView.setX(getCenterX() - getRadius());
-        imageView.setY(getCenterY() - getRadius());
+        this.isTest = isTest;
+        if (!this.isTest) {
+            Image image = new Image(getConstantSlimeImageName());
+            imageView = new ImageView(image);
+            imageView.setPreserveRatio(true);
+            //image size match slime size
+            imageView.setFitHeight(getRadius() * 2);
+            imageView.setFitWidth(getRadius() * 2);
+            //slime's centre same with image centre
+            imageView.setX(getCenterX() - getRadius());
+            imageView.setY(getCenterY() - getRadius());
+        }
+    }
+
+    /**
+     * Constructs a Slime object with specified position and petri dish.
+     *
+     * @param xPosition the initial X position of the slime
+     * @param yPosition the initial Y position of the slime
+     * @param petriDish the Petri dish of the slime
+     */
+    public Slime(final double xPosition, final double yPosition, final PetriDish petriDish){
+        this(xPosition,yPosition,petriDish,false);
     }
 
     //abstract methods
@@ -112,7 +128,7 @@ public abstract class Slime extends Circle implements Runnable {
         }
     }
 
-    private void checkBounds() {
+    public void checkBounds() {
         if (this.getCenterY() - this.getRadius() <= MIN_Y && this.getYVelocity() < 0) {
             yVelocity = GENERATOR.nextInt(1, MAX_VELOCITY);
             reachEdgeAction();
@@ -190,8 +206,10 @@ public abstract class Slime extends Circle implements Runnable {
     public void grow(final int growCoefficient) {
         this.size += growCoefficient;
         this.setRadius(this.getRadius() + 2 * growCoefficient);
-        imageView.setFitHeight(getRadius() * 2);
-        imageView.setFitWidth(getRadius() * 2);
+        if (!this.isTest) {
+            imageView.setFitHeight(getRadius() * 2);
+            imageView.setFitWidth(getRadius() * 2);
+        }
     }
 
     /**
@@ -200,8 +218,10 @@ public abstract class Slime extends Circle implements Runnable {
     public void shrinkSlimeToBaby() {
         this.size = INITIAL_SIZE;
         this.setRadius(INITIAL_RADIUS);
-        this.imageView.setFitWidth(INITIAL_RADIUS * 2);
-        this.imageView.setFitHeight(INITIAL_RADIUS * 2);
+        if (imageView != null) {
+            this.imageView.setFitWidth(INITIAL_RADIUS * 2);
+            this.imageView.setFitHeight(INITIAL_RADIUS * 2);
+        }
     }
 
     /**
@@ -210,15 +230,19 @@ public abstract class Slime extends Circle implements Runnable {
      */
     public void die() {
         this.setAlive(false);
-        this.petriDish.removeThread(this.thread);
-        this.setDeadImageView();
-        this.stopThread();
+        if (!this.isTest) {
+            this.petriDish.removeThread(this.thread);
+            this.setDeadImageView();
+            this.stopThread();
+        }
     }
 
 
     private void setDeadImageView() {
-        Image deadImage = new Image("deadSlime.png");
-        this.imageView.setImage(deadImage);
+        if (!this.isTest) {
+            Image deadImage = new Image("deadSlime.png");
+            this.imageView.setImage(deadImage);
+        }
     }
 
     /**
@@ -281,6 +305,14 @@ public abstract class Slime extends Circle implements Runnable {
      */
     public Thread getThread() {
         return this.thread;
+    }
+    /**
+     * Gets if the Slime is Alive.
+     *
+     * @return boolean representing if slime alive
+     */
+    public boolean isAlive() {
+        return isAlive;
     }
 
     /**
