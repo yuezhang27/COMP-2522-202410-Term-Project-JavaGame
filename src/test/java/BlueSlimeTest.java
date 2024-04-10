@@ -16,21 +16,58 @@ public class BlueSlimeTest {
     }
 
     @Test
+    public void containsConstantCalledINITIAL_RADIUS() {
+        assertEquals(10, blueSlime.INITIAL_RADIUS);
+    }
+
+    @Test
+    public void containsConstantCalledINITIAL_SIZE() {
+        assertEquals(1, blueSlime.INITIAL_SIZE);
+    }
+
+    @Test
+    public void containsConstantCalledMAX_VELOCITY() {
+        assertEquals(6, blueSlime.MAX_VELOCITY);
+    }
+
+    @Test
+    void priceWithinRange() {
+        assertTrue(blueSlime.getPrice() >= BlueSlime.MIN_PRICE && blueSlime.getPrice() <= BlueSlime.MAX_PRICE);
+    }
+
+    @Test
     public void testNoImageUnderTest() {
         assertNotNull(blueSlime);
         assertNull(blueSlime.getImageView());
     }
 
     @Test
-    public void testPriceIsWithinRange() {
-        assertTrue(blueSlime.getPrice() >= BlueSlime.MIN_PRICE && blueSlime.getPrice() < BlueSlime.MAX_PRICE);
-    }
-
-    @Test
-    public void testNameAndImageName() {
+    void nameAndImageSetCorrectly() {
         assertEquals(BlueSlime.BLUE_SLIME_NAME, blueSlime.getName());
         assertEquals(BlueSlime.BLUE_SLIME_IMAGE_NAME, blueSlime.getSlimeImage());
     }
+
+    @Test
+    void testSetPrice() {
+        int newPrice = 100;
+        blueSlime.setPrice(newPrice);
+        assertEquals(newPrice, blueSlime.getPrice());
+    }
+
+    @Test
+    void testSetAlive() {
+        blueSlime.setAlive(false);
+        assertFalse(blueSlime.isAlive());
+    }
+
+    @Test
+    void slimeIdShouldBeUniqueAndIncremental() {
+        int firstSlimeId = blueSlime.getSlimeId();
+        PetriDish mockPetriDish = new PetriDish();
+        BlueSlime anotherSlime = new BlueSlime(100, 100, mockPetriDish, true);
+        assertEquals(firstSlimeId + 1, anotherSlime.getSlimeId());
+    }
+
 
     @Test
     void slimeMoveCorrectly() {
@@ -44,16 +81,6 @@ public class BlueSlimeTest {
     }
 
     @Test
-    void priceWithinRange() {
-        assertTrue(blueSlime.getPrice() >= BlueSlime.MIN_PRICE && blueSlime.getPrice() <= BlueSlime.MAX_PRICE);
-    }
-
-    @Test
-    void nameAndImageSetCorrectly() {
-        assertEquals(BlueSlime.BLUE_SLIME_NAME, blueSlime.getName());
-        assertEquals(BlueSlime.BLUE_SLIME_IMAGE_NAME, blueSlime.getSlimeImage());
-    }
-    @Test
     void slimeShouldGrowCorrectly() {
         double initialSize = blueSlime.getRadius();
         blueSlime.grow(2);
@@ -61,9 +88,22 @@ public class BlueSlimeTest {
     }
 
     @Test
+    void slimeIsNotAliveAfterDie() {
+        blueSlime.die();
+        assertFalse(blueSlime.isAlive());
+    }
+
+    @Test
     void slimeShouldDieCorrectly() {
         blueSlime.die();
         assertFalse(blueSlime.isAlive());
+    }
+
+    @Test
+    void slimeShouldShrinkToBabyCorrectly() {
+        blueSlime.grow(5);
+        blueSlime.shrinkSlimeToBaby();
+        assertEquals(blueSlime.INITIAL_RADIUS, blueSlime.getRadius());
     }
 
 }
