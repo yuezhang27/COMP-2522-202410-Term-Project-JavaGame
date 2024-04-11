@@ -1,109 +1,109 @@
-import ca.bcit.comp2522.termproject.javagame.BlueSlime;
 import ca.bcit.comp2522.termproject.javagame.PetriDish;
+import ca.bcit.comp2522.termproject.javagame.PurpleSlime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PurpleSlimeTest {
-    private BlueSlime blueSlime;
+    private PurpleSlime purpleSlime;
     private PetriDish petriDish;
 
     @BeforeEach
     public void setUp() {
         PetriDish mockPetriDish = new PetriDish();
-        blueSlime = new BlueSlime(100, 100, mockPetriDish, true);
+        purpleSlime = new PurpleSlime(100, 100, mockPetriDish, true);
     }
 
     @Test
     public void containsConstantCalledINITIAL_RADIUS() {
-        assertEquals(10, blueSlime.INITIAL_RADIUS);
+        assertEquals(10, purpleSlime.INITIAL_RADIUS);
     }
 
     @Test
     public void containsConstantCalledINITIAL_SIZE() {
-        assertEquals(1, blueSlime.INITIAL_SIZE);
+        assertEquals(1, purpleSlime.INITIAL_SIZE);
     }
 
     @Test
     public void containsConstantCalledMAX_VELOCITY() {
-        assertEquals(6, blueSlime.MAX_VELOCITY);
+        assertEquals(6, purpleSlime.MAX_VELOCITY);
     }
 
     @Test
     void priceWithinRange() {
-        assertTrue(blueSlime.getPrice() >= BlueSlime.MIN_PRICE && blueSlime.getPrice() <= BlueSlime.MAX_PRICE);
+        assertTrue(purpleSlime.getPrice() >= PurpleSlime.MIN_PRICE && purpleSlime.getPrice() <= PurpleSlime.MAX_PRICE);
     }
 
     @Test
     public void testNoImageUnderTest() {
-        assertNotNull(blueSlime);
-        assertNull(blueSlime.getImageView());
+        assertNotNull(purpleSlime);
+        assertNull(purpleSlime.getImageView());
     }
 
     @Test
     void nameAndImageSetCorrectly() {
-        assertEquals(BlueSlime.BLUE_SLIME_NAME, blueSlime.getName());
-        assertEquals(BlueSlime.BLUE_SLIME_IMAGE_NAME, blueSlime.getSlimeImage());
+        assertEquals(PurpleSlime.PURPLE_SLIME_NAME, purpleSlime.getName());
+        assertEquals(PurpleSlime.PURPLE_SLIME_IMAGE_NAME, purpleSlime.getSlimeImage());
     }
 
     @Test
     void testSetPrice() {
         int newPrice = 100;
-        blueSlime.setPrice(newPrice);
-        assertEquals(newPrice, blueSlime.getPrice());
+        purpleSlime.setPrice(newPrice);
+        assertEquals(newPrice, purpleSlime.getPrice());
     }
 
     @Test
     void testSetAlive() {
-        blueSlime.setAlive(false);
-        assertFalse(blueSlime.isAlive());
+        purpleSlime.setAlive(false);
+        assertFalse(purpleSlime.isAlive());
     }
 
     @Test
     void slimeIdShouldBeUniqueAndIncremental() {
-        int firstSlimeId = blueSlime.getSlimeId();
+        int firstSlimeId = purpleSlime.getSlimeId();
         PetriDish mockPetriDish = new PetriDish();
-        BlueSlime anotherSlime = new BlueSlime(100, 100, mockPetriDish, true);
+        PurpleSlime anotherSlime = new PurpleSlime(100, 100, mockPetriDish, true);
         assertEquals(firstSlimeId + 1, anotherSlime.getSlimeId());
     }
 
 
     @Test
     void slimeMoveCorrectly() {
-        double initialX = blueSlime.getCenterX();
-        double initialY = blueSlime.getCenterY();
-        double xVelocity = blueSlime.getXVelocity();
-        double yVelocity = blueSlime.getYVelocity();
-        blueSlime.checkBounds();
-        assertEquals(initialX + xVelocity, blueSlime.getCenterX());
-        assertEquals(initialY + yVelocity, blueSlime.getCenterY());
+        double initialX = purpleSlime.getCenterX();
+        double initialY = purpleSlime.getCenterY();
+        double xVelocity = purpleSlime.getXVelocity();
+        double yVelocity = purpleSlime.getYVelocity();
+        purpleSlime.checkBounds();
+        assertEquals(initialX + xVelocity, purpleSlime.getCenterX());
+        assertEquals(initialY + yVelocity, purpleSlime.getCenterY());
     }
 
     @Test
     void slimeShouldGrowCorrectly() {
-        double initialSize = blueSlime.getRadius();
-        blueSlime.grow(2);
-        assertEquals(initialSize + 2 * 2, blueSlime.getRadius());
+        double initialSize = purpleSlime.getRadius();
+        purpleSlime.grow(2);
+        assertEquals(initialSize + 2 * 2, purpleSlime.getRadius());
     }
 
     @Test
     void slimeIsNotAliveAfterDie() {
-        blueSlime.die();
-        assertFalse(blueSlime.isAlive());
+        purpleSlime.die();
+        assertFalse(purpleSlime.isAlive());
     }
 
     @Test
     void slimeShouldDieCorrectly() {
-        blueSlime.die();
-        assertFalse(blueSlime.isAlive());
+        purpleSlime.die();
+        assertFalse(purpleSlime.isAlive());
     }
 
     @Test
     void slimeShouldShrinkToBabyCorrectly() {
-        blueSlime.grow(5);
-        blueSlime.shrinkSlimeToBaby();
-        assertEquals(blueSlime.INITIAL_RADIUS, blueSlime.getRadius());
+        purpleSlime.grow(5);
+        purpleSlime.shrinkSlimeToBaby();
+        assertEquals(purpleSlime.INITIAL_RADIUS, purpleSlime.getRadius());
     }
 
 }
