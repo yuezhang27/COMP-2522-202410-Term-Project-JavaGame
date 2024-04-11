@@ -22,6 +22,7 @@ Welcome to Bouncing Slimes! Follow these steps to start your game adventure.
     - After running `GameStartGUI.java`, a game window will appear on your screen.
     - Click the `START GAME!` button to begin your game.
 ![startGUIwithannotation.png](src%2Fmain%2Fresources%2FstartGUIwithannotation.png)
+
 Enjoy playing Bouncing Slimes and manage your PetriDish carefully!
 
 ## Game Description
