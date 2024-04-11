@@ -34,10 +34,22 @@ public class PinkSlime extends Slime {
      * @param xPosition the x-coordinate position of the slime
      * @param yPosition the y-coordinate position of the slime
      * @param petriDish the PetriDish where the slime belongs
+     * @param isTest the boolean value representing if the instance created is for test
+     */
+    public PinkSlime(final double xPosition, final double yPosition, final PetriDish petriDish, final boolean isTest) {
+        super(xPosition, yPosition, petriDish, isTest);
+        this.setPrice(new Random().nextInt(MIN_PRICE, MAX_PRICE));
+    }
+
+    /**
+     * Constructs a new PinkSlime object with the specified position and PetriDish.
+     *
+     * @param xPosition the x-coordinate position of the slime
+     * @param yPosition the y-coordinate position of the slime
+     * @param petriDish the PetriDish where the slime belongs
      */
     public PinkSlime(final double xPosition, final double yPosition, final PetriDish petriDish) {
-        super(xPosition, yPosition, petriDish);
-        this.setPrice(new Random().nextInt(MIN_PRICE, MAX_PRICE));
+        this(xPosition, yPosition, petriDish, false);
     }
 
     /**

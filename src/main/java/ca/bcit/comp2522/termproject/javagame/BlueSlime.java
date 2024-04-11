@@ -34,6 +34,7 @@ public class BlueSlime extends Slime {
      * @param xPosition the x-coordinate position of the slime
      * @param yPosition the y-coordinate position of the slime
      * @param petriDish the PetriDish where the slime belongs
+     * @param isTest the boolean value representing if the instance created is for test
      */
     public BlueSlime(final double xPosition, final double yPosition, final PetriDish petriDish, final boolean isTest) {
         super(xPosition, yPosition, petriDish, isTest);

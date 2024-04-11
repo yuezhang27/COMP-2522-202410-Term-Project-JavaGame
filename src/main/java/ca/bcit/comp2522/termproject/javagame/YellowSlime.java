@@ -30,11 +30,22 @@ public class YellowSlime extends Slime {
      * @param xPosition the x-coordinate position of the slime
      * @param yPosition the y-coordinate position of the slime
      * @param petriDish the PetriDish where the slime belongs
+     * @param test the boolean value representing if the instance created is for test
+     */
+    public YellowSlime(final double xPosition, final double yPosition, final PetriDish petriDish, final boolean test) {
+        super(xPosition, yPosition, petriDish, test);
+        this.setPrice(new Random().nextInt(MAX_PRICE));
+    }
+
+    /**
+     * Constructs a new YellowSlime object with the specified position and PetriDish.
+     *
+     * @param xPosition the x-coordinate position of the slime
+     * @param yPosition the y-coordinate position of the slime
+     * @param petriDish the PetriDish where the slime belongs
      */
     public YellowSlime(final double xPosition, final double yPosition, final PetriDish petriDish) {
-        super(xPosition, yPosition, petriDish);
-        this.setPrice(new Random().nextInt(MAX_PRICE));
-
+        this(xPosition, yPosition, petriDish, false);
     }
 
     /**
